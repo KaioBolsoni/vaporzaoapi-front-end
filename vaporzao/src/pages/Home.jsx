@@ -2,54 +2,48 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
 
 export default function Home() {
   const [recentes, setRecentes] = useState([]);
   const [topAvaliados, setTopAvaliados] = useState([]);
   const [populares, setPopulares] = useState([]);
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchHighlights() {
       try {
         setError("");
-        const [highlightsRes, userRes] = await Promise.all([
-          api.get("/jogos/destaques"),
-          api.get("/auth/me"),
-        ]);
-
-        const { recentes, topAvaliados, populares } = highlightsRes.data;
+        const response = await api.get("/jogos/destaques");
+        
+        const { recentes, topAvaliados, populares } = response.data;
         setRecentes(recentes || []);
         setTopAvaliados(topAvaliados || []);
         setPopulares(populares || []);
-
-        setUser(userRes.data);
       } catch (err) {
-        console.error("Error loading data:", err);
-        setError(
-          "Failed to load highlights or user info. Please try again later.",
-        );
+        console.error("Error loading highlights:", err);
+        setError("Failed to load highlights. Please try again later.");
       } finally {
         setLoading(false);
       }
     }
 
-    fetchData();
+    fetchHighlights();
   }, []);
 
   function handleLogout() {
-    localStorage.removeItem("token");
+    logout();
     navigate("/login");
   }
 
   if (loading) {
     return (
       <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-        <h2>Loading highlights and user profile...</h2>
+        <h2>Loading highlights...</h2>
       </div>
     );
   }
