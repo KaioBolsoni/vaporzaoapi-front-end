@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import Navbar from "../components/Navbar";
 
 export default function Home() {
   const [recentes, setRecentes] = useState([]);
@@ -12,26 +13,31 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchHighlights() {
+    async function fetchData() {
       try {
         setError("");
-        const response = await api.get("/jogos/destaques");
-        
-        // Destructure the response data
-        const { recentes, topAvaliados, populares } = response.data;
-        
+        const [highlightsRes, userRes] = await Promise.all([
+          api.get("/jogos/destaques"),
+          api.get("/auth/me"),
+        ]);
+
+        const { recentes, topAvaliados, populares } = highlightsRes.data;
         setRecentes(recentes || []);
         setTopAvaliados(topAvaliados || []);
         setPopulares(populares || []);
+
+        setUser(userRes.data);
       } catch (err) {
-        console.error("Error loading highlights:", err);
-        setError("Failed to load highlights. Please try again later.");
+        console.error("Error loading data:", err);
+        setError(
+          "Failed to load highlights or user info. Please try again later.",
+        );
       } finally {
         setLoading(false);
       }
     }
 
-    fetchHighlights();
+    fetchData();
   }, []);
 
   function handleLogout() {
@@ -42,7 +48,7 @@ export default function Home() {
   if (loading) {
     return (
       <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-        <h2>Loading highlights...</h2>
+        <h2>Loading highlights and user profile...</h2>
       </div>
     );
   }
@@ -52,7 +58,10 @@ export default function Home() {
       <div style={{ padding: "20px", fontFamily: "sans-serif", color: "red" }}>
         <h2>Error</h2>
         <p>{error}</p>
-        <button onClick={() => window.location.reload()} style={{ padding: "10px" }}>
+        <button
+          onClick={() => window.location.reload()}
+          style={{ padding: "10px" }}
+        >
           Retry
         </button>
       </div>
@@ -86,19 +95,21 @@ export default function Home() {
             }}
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=300&auto=format&fit=crop";
+              e.target.src =
+                "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=300&auto=format&fit=crop";
             }}
           />
         )}
         <h3 style={{ margin: "0", fontSize: "18px" }}>{game.titulo}</h3>
-        
+
         <p style={{ margin: "0", fontSize: "14px", color: "#666" }}>
           <strong>Developer:</strong> {game.desenvolvedora}
         </p>
 
         {game.generos && game.generos.length > 0 && (
           <p style={{ margin: "0", fontSize: "14px", color: "#666" }}>
-            <strong>Genres:</strong> {game.generos.map((g) => g.nome).join(", ")}
+            <strong>Genres:</strong>{" "}
+            {game.generos.map((g) => g.nome).join(", ")}
           </p>
         )}
 
@@ -108,7 +119,14 @@ export default function Home() {
           </p>
         )}
 
-        <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div
+          style={{
+            marginTop: "auto",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <span style={{ fontSize: "16px", fontWeight: "bold" }}>
             {game.preco === 0 ? "Free" : `R$ ${game.preco.toFixed(2)}`}
           </span>
@@ -118,44 +136,61 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif", maxWidth: "1200px", margin: "0 auto" }}>
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "2px solid #eee", paddingBottom: "10px", marginBottom: "30px" }}>
-        <h1 style={{ margin: 0 }}>Vaporzão 🎮</h1>
-        <button
-          onClick={handleLogout}
+    <div
+      style={{
+        padding: "20px",
+        fontFamily: "sans-serif",
+        maxWidth: "1200px",
+        margin: "0 auto",
+      }}
+    >
+      <Navbar user={user} onLogout={handleLogout} />
+
+      <section style={{ marginBottom: "40px" }}>
+        <h2
           style={{
-            padding: "8px 16px",
-            fontSize: "14px",
-            cursor: "pointer",
-            backgroundColor: "#ef4444",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
+            borderBottom: "1px solid #ccc",
+            paddingBottom: "5px",
+            marginBottom: "15px",
           }}
         >
-          Logout
-        </button>
-      </header>
-
-      {/* Recentes */}
-      <section style={{ marginBottom: "40px" }}>
-        <h2 style={{ borderBottom: "1px solid #ccc", paddingBottom: "5px", marginBottom: "15px" }}>Recent Releases</h2>
+          Recent Releases
+        </h2>
         {recentes.length === 0 ? (
           <p>No recent games found.</p>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "20px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+              gap: "20px",
+            }}
+          >
             {recentes.map((game) => renderGameCard(game))}
           </div>
         )}
       </section>
 
-      {/* Top Avaliados */}
       <section style={{ marginBottom: "40px" }}>
-        <h2 style={{ borderBottom: "1px solid #ccc", paddingBottom: "5px", marginBottom: "15px" }}>Top Rated</h2>
+        <h2
+          style={{
+            borderBottom: "1px solid #ccc",
+            paddingBottom: "5px",
+            marginBottom: "15px",
+          }}
+        >
+          Top Rated
+        </h2>
         {topAvaliados.length === 0 ? (
           <p>No highly rated games found.</p>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "20px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+              gap: "20px",
+            }}
+          >
             {topAvaliados.map((game) => renderGameCard(game, true))}
           </div>
         )}
@@ -163,11 +198,25 @@ export default function Home() {
 
       {/* Populares */}
       <section style={{ marginBottom: "40px" }}>
-        <h2 style={{ borderBottom: "1px solid #ccc", paddingBottom: "5px", marginBottom: "15px" }}>Popular</h2>
+        <h2
+          style={{
+            borderBottom: "1px solid #ccc",
+            paddingBottom: "5px",
+            marginBottom: "15px",
+          }}
+        >
+          Popular
+        </h2>
         {populares.length === 0 ? (
           <p>No popular games found.</p>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "20px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+              gap: "20px",
+            }}
+          >
             {populares.map((game) => renderGameCard(game))}
           </div>
         )}
