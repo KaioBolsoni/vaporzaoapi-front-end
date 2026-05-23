@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 export default function FirstAccess() {
   const [matricula, setMatricula] = useState("");
@@ -10,13 +11,21 @@ export default function FirstAccess() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { token, login, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (token) {
       navigate("/");
     }
-  }, [navigate]);
+  }, [token, navigate]);
+
+  if (authLoading) {
+    return (
+      <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
+        <h2>Checking session...</h2>
+      </div>
+    );
+  }
 
   async function handleFirstAccess(e) {
     e.preventDefault();
@@ -30,8 +39,8 @@ export default function FirstAccess() {
         senha: password,
       });
 
-      const token = response.data.token;
-      localStorage.setItem("token", token);
+      const { token: jwtToken, usuario } = response.data;
+      login(jwtToken, usuario);
 
       setSuccess("Password defined successfully! Redirecting...");
 
@@ -66,9 +75,38 @@ export default function FirstAccess() {
         account.
       </p>
 
-      {error && <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>}
+      {error && (
+        <div
+          style={{
+            padding: "10px",
+            backgroundColor: "#fef2f2",
+            border: "1px solid #fee2e2",
+            borderRadius: "4px",
+            color: "#991b1b",
+            fontSize: "14px",
+            fontWeight: "bold",
+            marginBottom: "15px",
+          }}
+        >
+          ❌ {error}
+        </div>
+      )}
+
       {success && (
-        <p style={{ color: "green", fontWeight: "bold" }}>{success}</p>
+        <div
+          style={{
+            padding: "10px",
+            backgroundColor: "#f0fdf4",
+            border: "1px solid #dcfce7",
+            borderRadius: "4px",
+            color: "#166534",
+            fontSize: "14px",
+            fontWeight: "bold",
+            marginBottom: "15px",
+          }}
+        >
+          ✅ {success}
+        </div>
       )}
 
       <form

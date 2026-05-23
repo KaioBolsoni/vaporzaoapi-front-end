@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [identifier, setIdentifier] = useState("");
@@ -9,13 +10,21 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { token, login, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (token) {
       navigate("/");
     }
-  }, [navigate]);
+  }, [token, navigate]);
+
+  if (authLoading) {
+    return (
+      <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
+        <h2>Checking session...</h2>
+      </div>
+    );
+  }
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -28,8 +37,8 @@ export default function Login() {
         senha: password,
       });
 
-      const token = response.data.token;
-      localStorage.setItem("token", token);
+      const { token: jwtToken, usuario } = response.data;
+      login(jwtToken, usuario);
 
       navigate("/");
     } catch (err) {
@@ -51,7 +60,22 @@ export default function Login() {
     >
       <h2>Catalog Access</h2>
 
-      {error && <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>}
+      {error && (
+        <div
+          style={{
+            padding: "10px",
+            backgroundColor: "#fef2f2",
+            border: "1px solid #fee2e2",
+            borderRadius: "4px",
+            color: "#991b1b",
+            fontSize: "14px",
+            fontWeight: "bold",
+            marginBottom: "15px",
+          }}
+        >
+          ❌ {error}
+        </div>
+      )}
 
       <form
         onSubmit={handleLogin}
