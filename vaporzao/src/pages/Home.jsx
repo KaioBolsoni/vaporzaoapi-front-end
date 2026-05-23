@@ -7,6 +7,7 @@ export default function Home() {
   const [recentes, setRecentes] = useState([]);
   const [topAvaliados, setTopAvaliados] = useState([]);
   const [populares, setPopulares] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
