@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
-import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [identifier, setIdentifier] = useState("");
@@ -10,14 +9,13 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { token, login } = useAuth();
 
-  // Redirect if already logged in
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (token) {
       navigate("/");
     }
-  }, [token, navigate]);
+  }, [navigate]);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -30,8 +28,8 @@ export default function Login() {
         senha: password,
       });
 
-      const { token: jwtToken, usuario } = response.data;
-      login(jwtToken, usuario);
+      const token = response.data.token;
+      localStorage.setItem("token", token);
 
       navigate("/");
     } catch (err) {
@@ -87,7 +85,10 @@ export default function Login() {
       </form>
 
       <div style={{ marginTop: "20px", fontSize: "14px", textAlign: "center" }}>
-        <Link to="/first-access" style={{ color: "#0066cc", textDecoration: "none" }}>
+        <Link
+          to="/first-access"
+          style={{ color: "#0066cc", textDecoration: "none" }}
+        >
           First access? Setup your password here
         </Link>
       </div>

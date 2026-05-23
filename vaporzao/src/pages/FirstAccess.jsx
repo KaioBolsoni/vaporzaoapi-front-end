@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
-import { useAuth } from "../context/AuthContext";
 
 export default function FirstAccess() {
   const [matricula, setMatricula] = useState("");
@@ -11,14 +10,13 @@ export default function FirstAccess() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { token, login } = useAuth();
 
-  // Redirect if already logged in
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (token) {
       navigate("/");
     }
-  }, [token, navigate]);
+  }, [navigate]);
 
   async function handleFirstAccess(e) {
     e.preventDefault();
@@ -32,19 +30,22 @@ export default function FirstAccess() {
         senha: password,
       });
 
-      const { token: jwtToken, usuario } = response.data;
-      login(jwtToken, usuario);
+      const token = response.data.token;
+      localStorage.setItem("token", token);
 
       setSuccess("Password defined successfully! Redirecting...");
-      
-      // Navigate to Home after a short delay so they see the success message
+
       setTimeout(() => {
         navigate("/");
       }, 1500);
     } catch (err) {
       console.error("Detailed first access error:", err);
-      const backendError = err.response?.data?.erro || err.response?.data?.mensagem;
-      setError(backendError || "Failed to define password. Please ensure your matriculation is registered.");
+      const backendError =
+        err.response?.data?.erro || err.response?.data?.mensagem;
+      setError(
+        backendError ||
+          "Failed to define password. Please ensure your matriculation is registered.",
+      );
     } finally {
       setLoading(false);
     }
@@ -61,11 +62,14 @@ export default function FirstAccess() {
     >
       <h2>First Access Setup</h2>
       <p style={{ color: "#666", fontSize: "14px", marginBottom: "20px" }}>
-        Enter your matriculation ID and define a password to initialize your account.
+        Enter your matriculation ID and define a password to initialize your
+        account.
       </p>
 
       {error && <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>}
-      {success && <p style={{ color: "green", fontWeight: "bold" }}>{success}</p>}
+      {success && (
+        <p style={{ color: "green", fontWeight: "bold" }}>{success}</p>
+      )}
 
       <form
         onSubmit={handleFirstAccess}
