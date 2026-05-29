@@ -242,13 +242,21 @@ function HeroSection({ game, status }) {
               {naWishlist ? "♥ Na wishlist" : "♡ Adicionar à wishlist"}
             </button>
 
-            {status.temReview && (
+            {(status.reviewFeita || status.temReview) ? (
               <Badge
                 color="var(--color-primary)"
                 bg="rgba(139,92,246,0.1)"
                 border="rgba(139,92,246,0.25)"
               >
                 ★ Avaliado
+              </Badge>
+            ) : (
+              <Badge
+                color="#64748b"
+                bg="rgba(255,255,255,0.05)"
+                border="rgba(255,255,255,0.1)"
+              >
+                ☆ Não avaliado
               </Badge>
             )}
           </div>
