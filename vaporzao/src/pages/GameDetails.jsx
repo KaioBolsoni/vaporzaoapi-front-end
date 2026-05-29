@@ -28,7 +28,7 @@ export default function GameDetails() {
         setError(
           err.response?.status === 404
             ? "Jogo não encontrado."
-            : "Erro ao carregar detalhes do jogo."
+            : "Erro ao carregar detalhes do jogo.",
         );
       } finally {
         setLoading(false);
@@ -49,12 +49,20 @@ export default function GameDetails() {
         {loading ? (
           <DetailsSkeleton />
         ) : error ? (
-          <ErrorState message={error} onBack={() => navigate("/catalogo")} backLabel="Voltar ao catálogo" />
+          <ErrorState
+            message={error}
+            onBack={() => navigate("/catalogo")}
+            backLabel="Voltar ao catálogo"
+          />
         ) : (
           <div className="animate-slide-up">
             <HeroSection game={game} status={status} />
-            {game.imagens?.length > 0 && <GallerySection images={game.imagens} />}
-            {game.conquistas?.length > 0 && <AchievementsSection conquistas={game.conquistas} />}
+            {game.imagens?.length > 0 && (
+              <GallerySection images={game.imagens} />
+            )}
+            {game.conquistas?.length > 0 && (
+              <AchievementsSection conquistas={game.conquistas} />
+            )}
             {game.reviews?.length > 0 && (
               <ReviewsSection
                 reviews={game.reviews}
@@ -72,8 +80,23 @@ function HeroSection({ game, status }) {
   const navigate = useNavigate();
   const gradient = getGameGradient(game.id);
 
+  const [naWishlist, setNaWishlist] = useState(false);
+
+  useEffect(() => {
+    if (status) {
+      setNaWishlist(status.naWishlist);
+    }
+  }, [status]);
+
   return (
-    <div style={{ display: "flex", gap: "2rem", marginBottom: "2.5rem", flexWrap: "wrap" }}>
+    <div
+      style={{
+        display: "flex",
+        gap: "2rem",
+        marginBottom: "2.5rem",
+        flexWrap: "wrap",
+      }}
+    >
       <div
         style={{
           width: "260px",
@@ -87,12 +110,33 @@ function HeroSection({ game, status }) {
         <GameCover game={game} fontSize="4rem" />
       </div>
 
-      <div style={{ flex: 1, minWidth: "240px", display: "flex", flexDirection: "column", gap: "12px" }}>
+      <div
+        style={{
+          flex: 1,
+          minWidth: "240px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px",
+        }}
+      >
         <div>
-          <h1 style={{ margin: "0 0 4px", fontSize: "2rem", fontWeight: 800, lineHeight: 1.15 }}>
+          <h1
+            style={{
+              margin: "0 0 4px",
+              fontSize: "2rem",
+              fontWeight: 800,
+              lineHeight: 1.15,
+            }}
+          >
             {game.titulo}
           </h1>
-          <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-muted)" }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: "0.9rem",
+              color: "var(--text-muted)",
+            }}
+          >
             por {game.desenvolvedora}
           </p>
         </div>
@@ -124,7 +168,9 @@ function HeroSection({ game, status }) {
             <span style={{ fontSize: "1.3rem", fontWeight: 700 }}>
               {Number(game.mediaNotas).toFixed(1)}
             </span>
-            <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>/10</span>
+            <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
+              /10
+            </span>
           </div>
         )}
 
@@ -133,27 +179,67 @@ function HeroSection({ game, status }) {
             style={{
               fontSize: "1.8rem",
               fontWeight: 800,
-              color: game.preco === 0 ? "var(--color-success)" : "var(--text-primary)",
+              color:
+                game.preco === 0
+                  ? "var(--color-success)"
+                  : "var(--text-primary)",
             }}
           >
-            {game.preco === 0 ? "Grátis" : `R$ ${Number(game.preco).toFixed(2)}`}
+            {game.preco === 0
+              ? "Grátis"
+              : `R$ ${Number(game.preco).toFixed(2)}`}
           </span>
         </div>
 
         {status && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "8px",
+            }}
+          >
             {status.naBiblioteca && (
-              <Badge color="#10b981" bg="rgba(16,185,129,0.1)" border="rgba(16,185,129,0.25)">
+              <Badge
+                color="#10b981"
+                bg="rgba(16,185,129,0.1)"
+                border="rgba(16,185,129,0.25)"
+              >
                 ✓ Na biblioteca
               </Badge>
             )}
-            {status.naWishlist && (
-              <Badge color="#f59e0b" bg="rgba(245,158,11,0.1)" border="rgba(245,158,11,0.25)">
-                ♥ Na wishlist
-              </Badge>
-            )}
+
+            {/* Botão simples da Wishlist (Estilo estudante) */}
+            <button
+              onClick={() => setNaWishlist(!naWishlist)}
+              style={{
+                background: naWishlist
+                  ? "rgba(245,158,11,0.12)"
+                  : "transparent",
+                color: "#f59e0b",
+                border: "1px solid rgba(245,158,11,0.35)",
+                padding: "4px 12px",
+                borderRadius: "20px",
+                cursor: "pointer",
+                fontWeight: 600,
+                fontSize: "0.78rem",
+                fontFamily: "var(--font-sans)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+                transition: "all 0.2s",
+              }}
+            >
+              {naWishlist ? "♥ Na wishlist" : "♡ Adicionar à wishlist"}
+            </button>
+
             {status.temReview && (
-              <Badge color="var(--color-primary)" bg="rgba(139,92,246,0.1)" border="rgba(139,92,246,0.25)">
+              <Badge
+                color="var(--color-primary)"
+                bg="rgba(139,92,246,0.1)"
+                border="rgba(139,92,246,0.25)"
+              >
                 ★ Avaliado
               </Badge>
             )}
@@ -198,13 +284,22 @@ function Badge({ color, bg, border, children }) {
 function GallerySection({ images }) {
   return (
     <SectionBlock title="Galeria">
-      <div style={{ display: "flex", gap: "12px", overflowX: "auto", paddingBottom: "8px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "12px",
+          overflowX: "auto",
+          paddingBottom: "8px",
+        }}
+      >
         {images.map((img, i) => (
           <img
             key={img.id ?? i}
             src={img.url}
             alt={`Screenshot ${i + 1}`}
-            onError={(e) => { e.target.style.display = "none"; }}
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
             style={{
               height: "190px",
               borderRadius: "8px",
@@ -239,11 +334,27 @@ function AchievementsSection({ conquistas }) {
               padding: "14px",
             }}
           >
-            <div style={{ fontWeight: 600, fontSize: "0.875rem", marginBottom: "4px", display: "flex", gap: "8px" }}>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: "0.875rem",
+                marginBottom: "4px",
+                display: "flex",
+                gap: "8px",
+              }}
+            >
               🏆 {c.nome}
             </div>
             {c.descricao && (
-              <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--text-muted)" }}>{c.descricao}</p>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "0.8rem",
+                  color: "var(--text-muted)",
+                }}
+              >
+                {c.descricao}
+              </p>
             )}
           </div>
         ))}
@@ -275,7 +386,9 @@ function ReviewsSection({ reviews, onUserClick }) {
               }}
             >
               <button
-                onClick={() => r.autor?.matricula && onUserClick(r.autor.matricula)}
+                onClick={() =>
+                  r.autor?.matricula && onUserClick(r.autor.matricula)
+                }
                 style={{
                   background: "none",
                   border: "none",
@@ -289,12 +402,25 @@ function ReviewsSection({ reviews, onUserClick }) {
               >
                 {toTitleCase(r.autor?.nome ?? "Usuário")}
               </button>
-              <span style={{ color: "#f59e0b", fontWeight: 700, fontSize: "0.875rem" }}>
+              <span
+                style={{
+                  color: "#f59e0b",
+                  fontWeight: 700,
+                  fontSize: "0.875rem",
+                }}
+              >
                 ★ {r.nota}/10
               </span>
             </div>
             {r.texto && (
-              <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.65 }}>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "0.875rem",
+                  color: "var(--text-secondary)",
+                  lineHeight: 1.65,
+                }}
+              >
                 "{r.texto}"
               </p>
             )}
@@ -338,8 +464,12 @@ function ErrorState({ message, onBack, backLabel }) {
         border: "1px solid rgba(255,255,255,0.06)",
       }}
     >
-      <p style={{ color: "var(--color-error)", marginBottom: "1rem" }}>{message}</p>
-      <button className="btn btn-outline" onClick={onBack}>{backLabel}</button>
+      <p style={{ color: "var(--color-error)", marginBottom: "1rem" }}>
+        {message}
+      </p>
+      <button className="btn btn-outline" onClick={onBack}>
+        {backLabel}
+      </button>
     </div>
   );
 }
@@ -347,10 +477,29 @@ function ErrorState({ message, onBack, backLabel }) {
 function DetailsSkeleton() {
   return (
     <div style={{ display: "flex", gap: "2rem", marginBottom: "2.5rem" }}>
-      <div className="skeleton" style={{ width: "260px", height: "340px", borderRadius: "14px", flexShrink: 0 }} />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "14px" }}>
+      <div
+        className="skeleton"
+        style={{
+          width: "260px",
+          height: "340px",
+          borderRadius: "14px",
+          flexShrink: 0,
+        }}
+      />
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: "14px",
+        }}
+      >
         {[200, 120, 80, 60, 300].map((w, i) => (
-          <div key={i} className="skeleton" style={{ width: `${w}px`, height: "18px", borderRadius: "6px" }} />
+          <div
+            key={i}
+            className="skeleton"
+            style={{ width: `${w}px`, height: "18px", borderRadius: "6px" }}
+          />
         ))}
       </div>
     </div>
