@@ -200,13 +200,21 @@ function HeroSection({ game, status }) {
               gap: "8px",
             }}
           >
-            {status.naBiblioteca && (
+            {status.naBiblioteca ? (
               <Badge
                 color="#10b981"
                 bg="rgba(16,185,129,0.1)"
                 border="rgba(16,185,129,0.25)"
               >
                 ✓ Na biblioteca
+              </Badge>
+            ) : (
+              <Badge
+                color="#64748b"
+                bg="rgba(255,255,255,0.05)"
+                border="rgba(255,255,255,0.1)"
+              >
+                ✕ Não na biblioteca
               </Badge>
             )}
 
