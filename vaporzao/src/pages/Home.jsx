@@ -37,7 +37,8 @@ export default function Home() {
   const heroGame = topAvaliados[0] || recentes[0] || null;
   const allGames = [...recentes, ...topAvaliados, ...populares];
   const destaques = topAvaliados.slice(0, 5);
-  const totalJogos = [...new Map(allGames.map((g) => [g.id, g])).values()].length;
+  const totalJogos = [...new Map(allGames.map((g) => [g.id, g])).values()]
+    .length;
 
   return (
     <Layout>
@@ -62,7 +63,11 @@ export default function Home() {
             <>
               {heroGame && <HeroBanner game={heroGame} />}
               {recentes.length > 0 && (
-                <GameSection title="Recentes" subtitle="Lançamentos das últimas semanas" games={recentes} />
+                <GameSection
+                  title="Recentes"
+                  subtitle="Lançamentos das últimas semanas"
+                  games={recentes}
+                />
               )}
               {topAvaliados.length > 0 && (
                 <GameSection title="Mais Avaliados" games={topAvaliados} />
@@ -114,7 +119,9 @@ function LeftSidebar({ generos, totalJogos }) {
             key={g.id}
             label={g.nome}
             count={g._count?.jogos}
-            onClick={() => navigate("/catalogo")}
+            onClick={() =>
+              navigate("/catalogo", { state: { genreId: Number(g.id) } })
+            }
           />
         ))}
       </ul>
@@ -133,9 +140,22 @@ function LeftSidebar({ generos, totalJogos }) {
       </p>
 
       <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-        <ShortcutLink icon="⊞" label="Biblioteca" onClick={() => navigate("/biblioteca")} />
-        <ShortcutLink icon="♡" label="Wishlist" onClick={() => navigate("/wishlist")} />
-        <ShortcutLink icon="+" label="Criar jogo" onClick={() => navigate("/jogos/novo")} accent />
+        <ShortcutLink
+          icon="⊞"
+          label="Biblioteca"
+          onClick={() => navigate("/biblioteca")}
+        />
+        <ShortcutLink
+          icon="♡"
+          label="Wishlist"
+          onClick={() => navigate("/wishlist")}
+        />
+        <ShortcutLink
+          icon="+"
+          label="Criar jogo"
+          onClick={() => navigate("/jogos/novo")}
+          accent
+        />
       </ul>
     </aside>
   );
@@ -163,11 +183,20 @@ function SidebarCategory({ label, count, active, onClick, icon }) {
           textAlign: "left",
           marginBottom: "2px",
         }}
-        onMouseEnter={(e) => { if (!active) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-        onMouseLeave={(e) => { if (!active) e.currentTarget.style.background = "none"; }}
+        onMouseEnter={(e) => {
+          if (!active)
+            e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+        }}
+        onMouseLeave={(e) => {
+          if (!active) e.currentTarget.style.background = "none";
+        }}
       >
         <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          {icon && <span style={{ color: "var(--color-primary)", fontSize: "0.7rem" }}>{icon}</span>}
+          {icon && (
+            <span style={{ color: "var(--color-primary)", fontSize: "0.7rem" }}>
+              {icon}
+            </span>
+          )}
           {label}
         </span>
         {count !== undefined && (
@@ -175,7 +204,9 @@ function SidebarCategory({ label, count, active, onClick, icon }) {
             style={{
               fontSize: "0.72rem",
               color: active ? "#fff" : "var(--text-muted)",
-              background: active ? "var(--color-primary)" : "rgba(255,255,255,0.07)",
+              background: active
+                ? "var(--color-primary)"
+                : "rgba(255,255,255,0.07)",
               padding: "1px 6px",
               borderRadius: "10px",
               fontWeight: 600,
@@ -210,8 +241,12 @@ function ShortcutLink({ icon, label, onClick, accent }) {
           borderRadius: "6px",
           marginBottom: "2px",
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "none";
+        }}
       >
         <span style={{ fontSize: "0.85rem" }}>{icon}</span>
         {label}
@@ -261,7 +296,14 @@ function HeroBanner({ game }) {
 
       {/* Content */}
       <div style={{ position: "relative", zIndex: 1, maxWidth: "60%" }}>
-        <div style={{ display: "flex", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            marginBottom: "16px",
+            flexWrap: "wrap",
+          }}
+        >
           <Chip>⭐ Destaque</Chip>
           {game.generos?.slice(0, 2).map((g) => (
             <Chip key={g.id}>{g.nome}</Chip>
@@ -295,7 +337,14 @@ function HeroBanner({ game }) {
           </p>
         )}
 
-        <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "16px",
+            flexWrap: "wrap",
+          }}
+        >
           <button
             onClick={() => navigate(`/jogos/${game.id}`)}
             className="btn btn-primary"
@@ -304,9 +353,11 @@ function HeroBanner({ game }) {
             🛒 Ver na loja
           </button>
           {game.mediaNotas !== undefined && game.mediaNotas !== null && (
-            <span style={{ color: "rgba(255,255,255,0.9)", fontSize: "0.9rem" }}>
+            <span
+              style={{ color: "rgba(255,255,255,0.9)", fontSize: "0.9rem" }}
+            >
               ★ {Number(game.mediaNotas).toFixed(1)}
-              {(game.contagens?.reviews || game._count?.reviews)
+              {game.contagens?.reviews || game._count?.reviews
                 ? ` · ${(game.contagens?.reviews ?? game._count?.reviews).toLocaleString("pt-BR")} reviews`
                 : ""}
             </span>
@@ -339,11 +390,28 @@ function Chip({ children }) {
 function GameSection({ title, subtitle, games }) {
   return (
     <section style={{ marginBottom: "36px" }}>
-      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "16px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          justifyContent: "space-between",
+          marginBottom: "16px",
+        }}
+      >
         <div>
-          <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700 }}>{title}</h2>
+          <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700 }}>
+            {title}
+          </h2>
           {subtitle && (
-            <p style={{ margin: "2px 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>{subtitle}</p>
+            <p
+              style={{
+                margin: "2px 0 0",
+                fontSize: "0.8rem",
+                color: "var(--text-muted)",
+              }}
+            >
+              {subtitle}
+            </p>
           )}
         </div>
       </div>
@@ -392,8 +460,12 @@ function RightSidebar({ games, activeId }) {
                 gap: "12px",
                 padding: "10px 12px",
                 borderRadius: "10px",
-                background: active ? "rgba(139,92,246,0.1)" : "rgba(255,255,255,0.03)",
-                border: active ? "1px solid rgba(139,92,246,0.3)" : "1px solid rgba(255,255,255,0.06)",
+                background: active
+                  ? "rgba(139,92,246,0.1)"
+                  : "rgba(255,255,255,0.03)",
+                border: active
+                  ? "1px solid rgba(139,92,246,0.3)"
+                  : "1px solid rgba(255,255,255,0.06)",
                 cursor: "pointer",
                 textAlign: "left",
                 transition: "background 0.15s, border-color 0.15s",
@@ -443,7 +515,13 @@ function RightSidebar({ games, activeId }) {
                 >
                   {game.titulo}
                 </p>
-                <p style={{ margin: 0, fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: "0.75rem",
+                    color: "var(--text-muted)",
+                  }}
+                >
                   {game.desenvolvedora}
                 </p>
               </div>
@@ -458,10 +536,23 @@ function RightSidebar({ games, activeId }) {
 function HomeSkeleton() {
   return (
     <>
-      <div className="skeleton" style={{ height: "240px", borderRadius: "16px", marginBottom: "32px" }} />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
+      <div
+        className="skeleton"
+        style={{ height: "240px", borderRadius: "16px", marginBottom: "32px" }}
+      />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "16px",
+        }}
+      >
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="skeleton" style={{ height: "220px", borderRadius: "12px" }} />
+          <div
+            key={i}
+            className="skeleton"
+            style={{ height: "220px", borderRadius: "12px" }}
+          />
         ))}
       </div>
     </>

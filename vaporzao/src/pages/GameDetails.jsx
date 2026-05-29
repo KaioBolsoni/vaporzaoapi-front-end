@@ -146,6 +146,9 @@ function HeroSection({ game, status }) {
             {game.generos.map((g) => (
               <span
                 key={g.id}
+                onClick={() =>
+                  navigate("/catalogo", { state: { genreId: Number(g.id) } })
+                }
                 style={{
                   fontSize: "0.75rem",
                   background: "rgba(139,92,246,0.12)",
@@ -154,6 +157,14 @@ function HeroSection({ game, status }) {
                   padding: "3px 10px",
                   borderRadius: "20px",
                   fontWeight: 500,
+                  cursor: "pointer",
+                  transition: "background 0.15s, transform 0.1s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(139,92,246,0.22)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(139,92,246,0.12)";
                 }}
               >
                 {g.nome}
@@ -242,7 +253,7 @@ function HeroSection({ game, status }) {
               {naWishlist ? "♥ Na wishlist" : "♡ Adicionar à wishlist"}
             </button>
 
-            {(status.reviewFeita || status.temReview) ? (
+            {status.reviewFeita || status.temReview ? (
               <Badge
                 color="var(--color-primary)"
                 bg="rgba(139,92,246,0.1)"

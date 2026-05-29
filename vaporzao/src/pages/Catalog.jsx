@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import api from "../services/api";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
@@ -17,14 +18,26 @@ const PRICE_OPTIONS = [
 ];
 
 export default function Catalog() {
+  const location = useLocation();
   const [jogos, setJogos] = useState([]);
   const [generos, setGeneros] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState(() => {
+    if (location.state?.genreId) {
+      return [Number(location.state.genreId)];
+    }
+    return [];
+  });
   const [priceFilter, setPriceFilter] = useState("todos");
   const [sortBy, setSortBy] = useState("titulo");
+
+  const [prevGenreId, setPrevGenreId] = useState(location.state?.genreId);
+  if (location.state?.genreId !== prevGenreId) {
+    setPrevGenreId(location.state?.genreId);
+    setSelectedGenres(location.state?.genreId ? [Number(location.state.genreId)] : []);
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -65,7 +78,9 @@ export default function Catalog() {
     .filter((j) => {
       if (selectedGenres.length === 0) return true;
       if (!j.generos?.length) return false;
-      return j.generos.some((g) => selectedGenres.includes(Number(g.id)));
+
+      const gameGenreIds = j.generos.map((g) => Number(g.id));
+      return selectedGenres.every((id) => gameGenreIds.includes(id));
     })
     .filter((j) => {
       if (priceFilter === "gratis") return (j.preco || 0) === 0;
