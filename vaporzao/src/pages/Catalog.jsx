@@ -23,7 +23,9 @@ export default function Catalog() {
   const [generos, setGeneros] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(() => {
+    return location.state?.search || "";
+  });
   const [selectedGenres, setSelectedGenres] = useState(() => {
     if (location.state?.genreId) {
       return [Number(location.state.genreId)];
@@ -37,6 +39,12 @@ export default function Catalog() {
   if (location.state?.genreId !== prevGenreId) {
     setPrevGenreId(location.state?.genreId);
     setSelectedGenres(location.state?.genreId ? [Number(location.state.genreId)] : []);
+  }
+
+  const [prevSearch, setPrevSearch] = useState(location.state?.search);
+  if (location.state?.search !== prevSearch) {
+    setPrevSearch(location.state?.search);
+    setSearch(location.state?.search || "");
   }
 
   useEffect(() => {

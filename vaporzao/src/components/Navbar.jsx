@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { toTitleCase } from "../utils/gameColors";
+import SearchBar from "./SearchBar";
 
 function getUserHandle(nome = "") {
   const parts = nome.toLowerCase().split(" ").filter(Boolean);
@@ -117,36 +117,7 @@ export default function Navbar() {
       </div>
 
       {/* Search bar */}
-      <div
-        style={{
-          flex: 1,
-          maxWidth: "460px",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          background: "var(--bg-surface)",
-          border: "1px solid rgba(255,255,255,0.07)",
-          borderRadius: "8px",
-          padding: "0 12px",
-          height: "36px",
-        }}
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--text-muted)", flexShrink: 0 }}>
-          <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-        </svg>
-        <input
-          placeholder="Buscar jogos, desenvolvedoras, gêneros..."
-          style={{
-            background: "none",
-            border: "none",
-            outline: "none",
-            color: "var(--text-primary)",
-            fontSize: "0.85rem",
-            width: "100%",
-            fontFamily: "var(--font-sans)",
-          }}
-        />
-      </div>
+      <SearchBar />
 
       {/* Right side */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginLeft: "auto" }}>
