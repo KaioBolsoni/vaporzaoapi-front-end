@@ -4,6 +4,7 @@ import api from "../services/api";
 import Layout from "../components/Layout";
 import GameCover from "../components/GameCover";
 import { getGameGradient, toTitleCase } from "../utils/gameColors";
+import swal from "../utils/swal";
 
 export default function GameDetails() {
   const { id } = useParams();
@@ -81,12 +82,35 @@ function HeroSection({ game, status }) {
   const gradient = getGameGradient(game.id);
 
   const [naWishlist, setNaWishlist] = useState(false);
+  const [loadingWishlist, setLoadingWishlist] = useState(false);
 
   useEffect(() => {
     if (status) {
       setNaWishlist(status.naWishlist);
     }
   }, [status]);
+
+  async function toggleWishlist() {
+    if (loadingWishlist) return;
+    setLoadingWishlist(true);
+    try {
+      if (naWishlist) {
+        await api.delete(`/wishlist/${game.id}`);
+      } else {
+        await api.post(`/wishlist/${game.id}`);
+      }
+      setNaWishlist((prev) => !prev);
+    } catch (err) {
+      swal.fire({
+        icon: "error",
+        title: "Erro",
+        text:
+          err.response?.data?.erro || "Não foi possível atualizar a wishlist.",
+      });
+    } finally {
+      setLoadingWishlist(false);
+    }
+  }
 
   return (
     <div
@@ -229,9 +253,9 @@ function HeroSection({ game, status }) {
               </Badge>
             )}
 
-            {/* Botão simples da Wishlist (Estilo estudante) */}
             <button
-              onClick={() => setNaWishlist(!naWishlist)}
+              onClick={toggleWishlist}
+              disabled={loadingWishlist}
               style={{
                 background: naWishlist
                   ? "rgba(245,158,11,0.12)"
