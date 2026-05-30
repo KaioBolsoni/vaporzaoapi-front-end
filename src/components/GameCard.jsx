@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import GameCover from "./GameCover";
 
-function isNew(createdAt) {
-  if (!createdAt) return false;
-  const diff = Date.now() - new Date(createdAt).getTime();
-  return diff < 30 * 24 * 60 * 60 * 1000;
+function isWithin30Days(date) {
+  if (!date) return false;
+  const diff = Date.now() - new Date(date).getTime();
+  return diff >= 0 && diff < 30 * 24 * 60 * 60 * 1000;
 }
 
 export default function GameCard({ game, variant = "catalog" }) {
@@ -39,12 +39,9 @@ export default function GameCard({ game, variant = "catalog" }) {
       {/* Cover image */}
       <div style={{ position: "relative", aspectRatio: "16/10" }}>
         <GameCover game={game} />
-        {isNew(game.createdAt) && (
-          <span
-            style={{
-              position: "absolute",
-              top: "8px",
-              left: "8px",
+        <div style={{ position: "absolute", top: "8px", left: "8px", display: "flex", flexDirection: "column", gap: "4px" }}>
+          {isWithin30Days(game.createdAt) && (
+            <span style={{
               background: "var(--color-primary)",
               color: "#fff",
               fontSize: "0.6rem",
@@ -53,11 +50,25 @@ export default function GameCard({ game, variant = "catalog" }) {
               borderRadius: "20px",
               letterSpacing: "0.5px",
               textTransform: "uppercase",
-            }}
-          >
-            NOVO
-          </span>
-        )}
+            }}>
+              NOVO
+            </span>
+          )}
+          {isWithin30Days(game.lancamento) && (
+            <span style={{
+              background: "#10b981",
+              color: "#fff",
+              fontSize: "0.6rem",
+              fontWeight: 800,
+              padding: "2px 7px",
+              borderRadius: "20px",
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+            }}>
+              LANÇAMENTO
+            </span>
+          )}
+        </div>
         {game.mediaNotas !== undefined && game.mediaNotas !== null && (
           <span
             style={{
