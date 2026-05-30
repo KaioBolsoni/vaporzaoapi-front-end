@@ -370,7 +370,7 @@ function AchievementsSection({ conquistas }) {
                 gap: "8px",
               }}
             >
-              🏆 {c.nome}
+              🏆 {c.titulo}
             </div>
             {c.descricao && (
               <p
