@@ -81,6 +81,11 @@ function HeroSection({ game, status }) {
   const navigate = useNavigate();
   const gradient = getGameGradient(game.id);
 
+  const mediaNotas =
+    game.reviews?.length > 0
+      ? game.reviews.reduce((sum, r) => sum + r.nota, 0) / game.reviews.length
+      : null;
+
   const [naWishlist, setNaWishlist] = useState(false);
   const [loadingWishlist, setLoadingWishlist] = useState(false);
 
@@ -197,11 +202,11 @@ function HeroSection({ game, status }) {
           </div>
         )}
 
-        {game.mediaNotas !== undefined && game.mediaNotas !== null && (
+        {mediaNotas !== null && (
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span style={{ color: "#f59e0b", fontSize: "1.3rem" }}>★</span>
             <span style={{ fontSize: "1.3rem", fontWeight: 700 }}>
-              {Number(game.mediaNotas).toFixed(1)}
+              {mediaNotas.toFixed(1)}
             </span>
             <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
               /10
