@@ -102,7 +102,7 @@ export default function Catalog() {
         case "preco_desc":
           return (b.preco || 0) - (a.preco || 0);
         case "recentes":
-          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+          return new Date(b.lancamento || 0) - new Date(a.lancamento || 0);
         default:
           return (a.titulo || "").localeCompare(b.titulo || "");
       }
