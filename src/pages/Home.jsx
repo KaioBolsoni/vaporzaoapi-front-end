@@ -42,21 +42,12 @@ export default function Home() {
 
   return (
     <Layout>
-      <div
-        style={{
-          display: "flex",
-          gap: 0,
-          padding: "24px 1.5rem",
-          maxWidth: "1400px",
-          margin: "0 auto",
-          width: "100%",
-        }}
-      >
+      <div className="home-layout">
         {/* Left sidebar */}
         <LeftSidebar generos={generos} totalJogos={totalJogos} />
 
         {/* Main content */}
-        <main style={{ flex: 1, minWidth: 0, padding: "0 24px" }}>
+        <main className="home-main">
           {loading ? (
             <HomeSkeleton />
           ) : (
@@ -81,7 +72,9 @@ export default function Home() {
 
         {/* Right sidebar */}
         {!loading && destaques.length > 0 && (
-          <RightSidebar games={destaques} activeId={heroGame?.id} />
+          <div className="home-sidebar-right">
+            <RightSidebar games={destaques} activeId={heroGame?.id} />
+          </div>
         )}
       </div>
     </Layout>
@@ -92,7 +85,7 @@ function LeftSidebar({ generos, totalJogos }) {
   const navigate = useNavigate();
 
   return (
-    <aside style={{ width: "200px", flexShrink: 0 }}>
+    <aside className="home-sidebar-left">
       <p
         style={{
           fontSize: "0.65rem",
@@ -434,7 +427,7 @@ function RightSidebar({ games, activeId }) {
   const navigate = useNavigate();
 
   return (
-    <aside style={{ width: "260px", flexShrink: 0 }}>
+    <aside style={{ width: "100%" }}>
       <p
         style={{
           fontSize: "0.65rem",
