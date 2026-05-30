@@ -110,18 +110,9 @@ export default function Catalog() {
 
   return (
     <Layout>
-      <div
-        style={{
-          display: "flex",
-          padding: "28px 1.5rem 3rem",
-          maxWidth: "1400px",
-          margin: "0 auto",
-          width: "100%",
-          gap: "0",
-        }}
-      >
+      <div className="catalog-layout">
         {/* Sidebar */}
-        <aside style={{ width: "190px", flexShrink: 0 }}>
+        <aside className="catalog-sidebar">
           <SidebarSection label="Gêneros">
             {loading
               ? Array.from({ length: 6 }).map((_, i) => (
@@ -218,7 +209,7 @@ export default function Catalog() {
         </aside>
 
         {/* Main */}
-        <main style={{ flex: 1, minWidth: 0, paddingLeft: "36px" }}>
+        <main className="catalog-main">
           {loading ? (
             <CatalogSkeleton />
           ) : error ? (
