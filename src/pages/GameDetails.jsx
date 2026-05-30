@@ -145,6 +145,7 @@ function HeroSection({ game, status, onOpenReview }) {
       }}
     >
       <div
+        className="game-details-cover"
         style={{
           width: "260px",
           height: "340px",
