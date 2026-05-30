@@ -502,18 +502,6 @@ function ReviewCard({ review: r, onGameClick }) {
             </span>
           )}
         </div>
-        {r.texto && (
-          <p
-            style={{
-              margin: 0,
-              fontSize: "0.875rem",
-              color: "var(--text-secondary)",
-              lineHeight: 1.55,
-            }}
-          >
-            "{r.texto}"
-          </p>
-        )}
       </div>
     </div>
   );
