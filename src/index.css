@@ -398,3 +398,50 @@ body {
   color: var(--text) !important;
   border-color: var(--accent) !important;
 }
+
+/* ─── Layout responsivo ─── */
+
+.home-layout {
+  display: flex;
+  gap: 0;
+  padding: 24px 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+.home-sidebar-left  { width: 200px; flex-shrink: 0; }
+.home-sidebar-right { width: 260px; flex-shrink: 0; }
+.home-main          { flex: 1; min-width: 0; padding: 0 24px; }
+
+.catalog-layout {
+  display: flex;
+  padding: 28px 1.5rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  gap: 0;
+}
+.catalog-sidebar { width: 190px; flex-shrink: 0; }
+.catalog-main    { flex: 1; min-width: 0; padding-left: 36px; }
+
+.nav-links      { display: flex; gap: 0; }
+.navbar-search  { display: flex; flex: 1; }
+
+@media (max-width: 1100px) {
+  .home-sidebar-right { display: none; }
+}
+
+@media (max-width: 768px) {
+  .nav-links     { display: none; }
+  .navbar-search { display: none; }
+
+  .home-layout        { flex-direction: column; padding: 16px 1rem; }
+  .home-sidebar-left  { width: 100%; }
+  .home-main          { padding: 0; }
+
+  .catalog-layout  { flex-direction: column; padding: 16px 1rem 3rem; }
+  .catalog-sidebar { width: 100%; }
+  .catalog-main    { padding-left: 0; padding-top: 16px; }
+
+  .game-details-cover { width: 100% !important; height: 220px !important; }
+}
