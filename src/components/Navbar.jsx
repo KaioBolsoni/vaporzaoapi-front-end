@@ -82,7 +82,7 @@ export default function Navbar() {
       </Link>
 
       {/* Nav links */}
-      <div style={{ display: "flex", gap: "0" }}>
+      <div className="nav-links">
         {NAV_LINKS.map((link) => {
           const isActive = location.pathname === link.to;
           return (
@@ -117,7 +117,9 @@ export default function Navbar() {
       </div>
 
       {/* Search bar */}
-      <SearchBar />
+      <div className="navbar-search">
+        <SearchBar />
+      </div>
 
       {/* Right side */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginLeft: "auto" }}>
