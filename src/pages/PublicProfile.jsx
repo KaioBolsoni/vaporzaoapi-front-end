@@ -4,7 +4,11 @@ import api from "../services/api";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
 import { useAuth } from "../context/AuthContext";
-import { getGameGradient, getGameInitials, toTitleCase } from "../utils/gameColors";
+import {
+  getGameGradient,
+  getGameInitials,
+  toTitleCase,
+} from "../utils/gameColors";
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
@@ -41,7 +45,7 @@ export default function PublicProfile() {
         setError(
           err.response?.status === 404
             ? "Usuário não encontrado."
-            : "Erro ao carregar o perfil."
+            : "Erro ao carregar o perfil.",
         );
       } finally {
         setLoading(false);
@@ -73,7 +77,9 @@ export default function PublicProfile() {
               border: "1px solid rgba(255,255,255,0.06)",
             }}
           >
-            <p style={{ color: "var(--color-error)", marginBottom: "1rem" }}>{error}</p>
+            <p style={{ color: "var(--color-error)", marginBottom: "1rem" }}>
+              {error}
+            </p>
             <button className="btn btn-outline" onClick={() => navigate(-1)}>
               Voltar
             </button>
@@ -84,7 +90,10 @@ export default function PublicProfile() {
             <StatsRow profile={profile} />
 
             {profile.jogosCriados?.length > 0 && (
-              <GamesSection jogos={profile.jogosCriados} isOwnProfile={isOwnProfile} />
+              <GamesSection
+                jogos={profile.jogosCriados}
+                isOwnProfile={isOwnProfile}
+              />
             )}
 
             {profile.reviews?.length > 0 && (
@@ -129,17 +138,34 @@ function ProfileCard({ profile, isOwnProfile }) {
         marginBottom: "2px",
       }}
     >
-      <p style={{ margin: "0 0 16px", fontSize: "0.65rem", fontWeight: 700, color: "var(--text-muted)", letterSpacing: "1.5px", textTransform: "uppercase" }}>
+      <p
+        style={{
+          margin: "0 0 16px",
+          fontSize: "0.65rem",
+          fontWeight: 700,
+          color: "var(--text-muted)",
+          letterSpacing: "1.5px",
+          textTransform: "uppercase",
+        }}
+      >
         Perfil Público
       </p>
 
-      <div style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start", flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "1.5rem",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+        }}
+      >
         <div
           style={{
             width: "72px",
             height: "72px",
             borderRadius: "50%",
-            background: "linear-gradient(135deg, var(--color-primary), #6366f1)",
+            background:
+              "linear-gradient(135deg, var(--color-primary), #6366f1)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -154,26 +180,55 @@ function ProfileCard({ profile, isOwnProfile }) {
         </div>
 
         <div style={{ flex: 1, minWidth: "200px" }}>
-          <h1 style={{ margin: "0 0 6px", fontSize: "1.6rem", fontWeight: 800 }}>{displayName}</h1>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap", marginBottom: "10px" }}>
-            <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-              @{(displayName).split(" ")[0]?.toLowerCase()}.{profile.matricula?.slice(-4)}
+          <h1
+            style={{ margin: "0 0 6px", fontSize: "1.6rem", fontWeight: 800 }}
+          >
+            {displayName}
+          </h1>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              flexWrap: "wrap",
+              marginBottom: "10px",
+            }}
+          >
+            <span
+              style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}
+            >
+              @{displayName.split(" ")[0]?.toLowerCase()}.
+              {profile.matricula?.slice(-4)}
             </span>
             <span style={{ color: "rgba(255,255,255,0.15)" }}>·</span>
-            <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
+            <span
+              style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}
+            >
               {profile.matricula}
             </span>
-            {profile.criadoEm && (
+            {profile.createdAt && (
               <>
                 <span style={{ color: "rgba(255,255,255,0.15)" }}>·</span>
-                <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-                  membro desde {formatDate(profile.criadoEm)}
+                <span
+                  style={{
+                    fontSize: "0.85rem",
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  membro desde {formatDate(profile.createdAt)}
                 </span>
               </>
             )}
           </div>
           {profile.bio && (
-            <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: "0.9rem",
+                color: "var(--text-secondary)",
+                lineHeight: 1.6,
+              }}
+            >
               {profile.bio}
             </p>
           )}
@@ -198,7 +253,9 @@ function StatsRow({ profile }) {
       icon: "+",
       label: "JOGOS CRIADOS",
       value: profile.jogosCriados?.length ?? profile._count?.jogosCriados ?? 0,
-      suffix: profile._count?.jogosSlots ? `/ ${profile._count.jogosSlots}` : null,
+      suffix: profile._count?.jogosSlots
+        ? `/ ${profile._count.jogosSlots}`
+        : null,
     },
     {
       icon: "✏",
@@ -251,8 +308,15 @@ function StatsRow({ profile }) {
           <p style={{ margin: 0, fontSize: "1.6rem", fontWeight: 800 }}>
             {s.value}
             {s.suffix && (
-              <span style={{ fontSize: "0.9rem", color: "var(--text-muted)", fontWeight: 400 }}>
-                {" "}{s.suffix}
+              <span
+                style={{
+                  fontSize: "0.9rem",
+                  color: "var(--text-muted)",
+                  fontWeight: 400,
+                }}
+              >
+                {" "}
+                {s.suffix}
               </span>
             )}
           </p>
@@ -265,10 +329,25 @@ function StatsRow({ profile }) {
 function GamesSection({ jogos, isOwnProfile }) {
   return (
     <section style={{ marginBottom: "2.5rem" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "8px",
+        }}
+      >
         <div>
-          <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700 }}>Jogos criados</h2>
-          <p style={{ margin: "2px 0 0", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+          <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700 }}>
+            Jogos criados
+          </h2>
+          <p
+            style={{
+              margin: "2px 0 0",
+              fontSize: "0.8rem",
+              color: "var(--text-muted)",
+            }}
+          >
             {jogos.length} jogo(s)
           </p>
         </div>
@@ -301,9 +380,20 @@ function GamesSection({ jogos, isOwnProfile }) {
 function ReviewsSection({ reviews, onGameClick }) {
   return (
     <section style={{ marginBottom: "2.5rem" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
-        <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700 }}>Últimas reviews</h2>
-        <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{reviews.length} total</span>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "16px",
+        }}
+      >
+        <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700 }}>
+          Últimas reviews
+        </h2>
+        <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+          {reviews.length} total
+        </span>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -353,7 +443,15 @@ function ReviewCard({ review: r, onGameClick }) {
       </div>
 
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", marginBottom: "4px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            flexWrap: "wrap",
+            marginBottom: "4px",
+          }}
+        >
           <button
             onClick={() => r.jogo && onGameClick(r.jogo.id)}
             style={{
@@ -369,7 +467,11 @@ function ReviewCard({ review: r, onGameClick }) {
           >
             {r.jogo?.titulo ?? "Jogo removido"}
           </button>
-          <span style={{ color: "#f59e0b", fontWeight: 700, fontSize: "0.85rem" }}>★ {r.nota}/10</span>
+          <span
+            style={{ color: "#f59e0b", fontWeight: 700, fontSize: "0.85rem" }}
+          >
+            ★ {r.nota}/10
+          </span>
           {r.nota >= 7 && (
             <span
               style={{
@@ -388,15 +490,28 @@ function ReviewCard({ review: r, onGameClick }) {
               ✓ Recomenda
             </span>
           )}
-          {r.criadoEm && (
-            <span style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginLeft: "auto" }}>
-              {new Date(r.criadoEm).toLocaleDateString("pt-BR")}
+          {r.createdAt && (
+            <span
+              style={{
+                fontSize: "0.78rem",
+                color: "var(--text-muted)",
+                marginLeft: "auto",
+              }}
+            >
+              {new Date(r.createdAt).toLocaleDateString("pt-BR")}
             </span>
           )}
         </div>
-        {r.comentario && (
-          <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.55 }}>
-            "{r.comentario}"
+        {r.texto && (
+          <p
+            style={{
+              margin: 0,
+              fontSize: "0.875rem",
+              color: "var(--text-secondary)",
+              lineHeight: 1.55,
+            }}
+          >
+            "{r.texto}"
           </p>
         )}
       </div>
@@ -407,11 +522,35 @@ function ReviewCard({ review: r, onGameClick }) {
 function ProfileSkeleton() {
   return (
     <>
-      <div className="skeleton" style={{ height: "160px", borderRadius: "16px 16px 0 0", marginBottom: "2px" }} />
-      <div className="skeleton" style={{ height: "80px", borderRadius: "0 0 16px 16px", marginBottom: "2rem" }} />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "16px" }}>
+      <div
+        className="skeleton"
+        style={{
+          height: "160px",
+          borderRadius: "16px 16px 0 0",
+          marginBottom: "2px",
+        }}
+      />
+      <div
+        className="skeleton"
+        style={{
+          height: "80px",
+          borderRadius: "0 0 16px 16px",
+          marginBottom: "2rem",
+        }}
+      />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+          gap: "16px",
+        }}
+      >
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="skeleton" style={{ height: "280px", borderRadius: "12px" }} />
+          <div
+            key={i}
+            className="skeleton"
+            style={{ height: "280px", borderRadius: "12px" }}
+          />
         ))}
       </div>
     </>
