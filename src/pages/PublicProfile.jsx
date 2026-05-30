@@ -248,14 +248,15 @@ function ProfileCard({ profile, isOwnProfile }) {
 }
 
 function StatsRow({ profile }) {
+  const jogosCriados = profile._count?.jogosCriados ?? profile.jogosCriados?.length ?? 0;
+  const limitAtingido = jogosCriados >= 3;
+
   const stats = [
     {
       icon: "+",
       label: "JOGOS CRIADOS",
-      value: profile.jogosCriados?.length ?? profile._count?.jogosCriados ?? 0,
-      suffix: profile._count?.jogosSlots
-        ? `/ ${profile._count.jogosSlots}`
-        : null,
+      value: jogosCriados,
+      suffix: `/ 3`,
     },
     {
       icon: "✏",
@@ -320,6 +321,21 @@ function StatsRow({ profile }) {
               </span>
             )}
           </p>
+          {s.label === "JOGOS CRIADOS" && limitAtingido && (
+            <span style={{
+              display: "inline-block",
+              marginTop: "4px",
+              fontSize: "0.65rem",
+              fontWeight: 700,
+              color: "#ef4444",
+              background: "rgba(239,68,68,0.1)",
+              border: "1px solid rgba(239,68,68,0.25)",
+              padding: "2px 8px",
+              borderRadius: "20px",
+            }}>
+              limite atingido
+            </span>
+          )}
         </div>
       ))}
     </div>
@@ -472,7 +488,7 @@ function ReviewCard({ review: r, onGameClick }) {
           >
             ★ {r.nota}/10
           </span>
-          {r.nota >= 7 && (
+          {r.recomenda && (
             <span
               style={{
                 fontSize: "0.72rem",
