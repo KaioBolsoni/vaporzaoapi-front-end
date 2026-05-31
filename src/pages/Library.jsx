@@ -76,6 +76,17 @@ export default function Library() {
     }
 
     async function removerBiblioteca(jogoId) {
+        const itemBiblioteca = biblioteca.find((item) => item.jogo.id === jogoId);
+        
+        if (itemBiblioteca && itemBiblioteca.jogo.preco > 0) {
+            swal.fire({
+                icon: 'warning',
+                title: 'Não permitido',
+                text: 'Apenas jogos gratuitos podem ser removidos da biblioteca.',
+            });
+            return;
+        }
+
         const confirmacao = await swal.fire({
             title: 'Tem certeza?',
             text: 'Você realmente deseja remover este jogo da sua biblioteca?',
