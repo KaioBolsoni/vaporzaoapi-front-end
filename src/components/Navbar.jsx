@@ -45,6 +45,7 @@ export default function Navbar() {
     { to: "/", label: "Loja" },
     { to: "/catalogo", label: "Catálogo" },
     { to: "/biblioteca", label: "Biblioteca" },
+    { to: "/wishlist", label: "Wishlist" },
   ];
 
   return (
@@ -125,7 +126,7 @@ export default function Navbar() {
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginLeft: "auto" }}>
         {user && (
           <Link
-            to={`/perfil/${user.matricula}`}
+            to="/wishlist"
             style={{
               color: "var(--text-muted)",
               textDecoration: "none",
