@@ -7,6 +7,7 @@ import GameDetails from "./pages/GameDetails";
 import PublicProfile from "./pages/PublicProfile";
 import ProtectedRoute from "./components/ProtectRouter/ProtectedRoute";
 import Library from "./pages/Library";
+import Wishlist from "./pages/Wishlist";
 
 function App() {
   return (
@@ -35,6 +36,13 @@ function App() {
         element={
           <ProtectedRoute>
             <Library />
+          </ProtectedRoute>
+        } />
+      <Route
+        path="/wishlist"
+        element={
+          <ProtectedRoute>
+            <Wishlist />
           </ProtectedRoute>
         } />
       <Route
