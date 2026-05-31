@@ -75,6 +75,27 @@ export default function Library() {
         }
     }
 
+    async function removerBiblioteca(jogoId) {
+        try {
+            await api.delete(`/biblioteca/${jogoId}`);
+            setBiblioteca((prev) => prev.filter((item) => item.jogo.id !== jogoId));
+            swal.fire({
+                icon: 'success',
+                title: 'Removido',
+                text: 'Jogo removido da sua biblioteca.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            console.error('Erro ao remover jogo:', error);
+            swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: error.response?.data?.erro || 'Não foi possível remover da biblioteca.',
+            });
+        }
+    }
+
     return (
         <Layout>
             <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 1.5rem 3rem' }}>
@@ -214,23 +235,39 @@ export default function Library() {
                                                 <span style={{ fontWeight: 700, color: '#10b981', fontSize: '0.9rem' }}>
                                                     {item.horasJogadas} hrs
                                                 </span>
-                                                <button
-                                                    onClick={() => {
-                                                        setEditandoId(item.jogo.id);
-                                                        setHorasInput(item.horasJogadas);
-                                                    }}
-                                                    style={{
-                                                        background: 'transparent',
-                                                        color: 'var(--text-secondary, #aaa)',
-                                                        border: '1px solid rgba(255,255,255,0.1)',
-                                                        padding: '4px 8px',
-                                                        borderRadius: '6px',
-                                                        cursor: 'pointer',
-                                                        fontSize: '0.8rem',
-                                                    }}
-                                                >
-                                                    Editar
-                                                </button>
+                                                <div style={{ display: 'flex', gap: '8px' }}>
+                                                    <button
+                                                        onClick={() => {
+                                                            setEditandoId(item.jogo.id);
+                                                            setHorasInput(item.horasJogadas);
+                                                        }}
+                                                        style={{
+                                                            background: 'transparent',
+                                                            color: 'var(--text-secondary, #aaa)',
+                                                            border: '1px solid rgba(255,255,255,0.1)',
+                                                            padding: '4px 8px',
+                                                            borderRadius: '6px',
+                                                            cursor: 'pointer',
+                                                            fontSize: '0.8rem',
+                                                        }}
+                                                    >
+                                                        Editar
+                                                    </button>
+                                                    <button
+                                                        onClick={() => removerBiblioteca(item.jogo.id)}
+                                                        style={{
+                                                            background: 'rgba(239,68,68,0.1)',
+                                                            color: '#ef4444',
+                                                            border: '1px solid rgba(239,68,68,0.3)',
+                                                            padding: '4px 8px',
+                                                            borderRadius: '6px',
+                                                            cursor: 'pointer',
+                                                            fontSize: '0.8rem',
+                                                        }}
+                                                    >
+                                                        Remover
+                                                    </button>
+                                                </div>
                                             </>
                                         )}
                                     </div>
