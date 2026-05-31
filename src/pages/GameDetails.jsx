@@ -300,22 +300,24 @@ function HeroSection({ game, status, onOpenReview }) {
                 onClick={adicionarBiblioteca}
                 disabled={loadingBiblioteca}
                 style={{
-                  background: "rgba(16,185,129,0.12)",
-                  color: "#10b981",
-                  border: "1px solid rgba(16,185,129,0.35)",
-                  padding: "4px 12px",
+                  background: "#10b981",
+                  color: "#ffffff",
+                  border: "1px solid #10b981",
+                  padding: "10px 16px",
                   borderRadius: "20px",
                   cursor: "pointer",
-                  fontWeight: 600,
-                  fontSize: "0.78rem",
+                  fontWeight: 700,
+                  fontSize: "1rem",
                   fontFamily: "var(--font-sans)",
-                  display: "inline-flex",
+                  display: "flex",
+                  justifyContent: "center",
                   alignItems: "center",
                   gap: "4px",
                   transition: "all 0.2s",
+                  width: "100%",
                 }}
               >
-                {loadingBiblioteca ? "Adicionando..." : "+ Adicionar à biblioteca"}
+                {loadingBiblioteca ? "Processando..." : "Comprar"}
               </button>
             )}
 
