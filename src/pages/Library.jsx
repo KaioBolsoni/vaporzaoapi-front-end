@@ -76,6 +76,21 @@ export default function Library() {
     }
 
     async function removerBiblioteca(jogoId) {
+        const confirmacao = await swal.fire({
+            title: 'Tem certeza?',
+            text: 'Você realmente deseja remover este jogo da sua biblioteca?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#888',
+            confirmButtonText: 'Sim, remover',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (!confirmacao.isConfirmed) {
+            return;
+        }
+
         try {
             await api.delete(`/biblioteca/${jogoId}`);
             setBiblioteca((prev) => prev.filter((item) => item.jogo.id !== jogoId));
