@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api';
 import Layout from '../components/Layout';
+import GameCard from '../components/GameCard';
 
 export default function Wishlist() {
     const [wishlist, setWishlist] = useState([]);
@@ -29,22 +30,27 @@ export default function Wishlist() {
 
     return (
         <Layout>
-            <div style={{ padding: '2rem' }}>
-                <h1>Minha Wishlist</h1>
+            <div style={{ padding: '2rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
+                <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '2rem' }}>Minha Wishlist</h1>
                 {loading ? (
-                    <p>Carregando...</p>
+                    <p style={{ color: 'var(--text-muted)' }}>Carregando...</p>
                 ) : erro ? (
-                    <p>{erro}</p>
+                    <p style={{ color: 'var(--color-error)' }}>{erro}</p>
                 ) : wishlist.length === 0 ? (
-                    <p>Sua wishlist está vazia.</p>
+                    <p style={{ color: 'var(--text-muted)' }}>Sua wishlist está vazia.</p>
                 ) : (
-                    <ul>
-                        {wishlist.map((item) => (
-                            <li key={item.jogo?.id || item.id}>
-                                {item.jogo ? item.jogo.titulo : item.titulo}
-                            </li>
-                        ))}
-                    </ul>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
+                        gap: '18px'
+                    }}>
+                        {wishlist.map((item) => {
+                            const game = item.jogo || item;
+                            return (
+                                <GameCard key={game.id} game={game} variant="catalog" />
+                            );
+                        })}
+                    </div>
                 )}
             </div>
         </Layout>
