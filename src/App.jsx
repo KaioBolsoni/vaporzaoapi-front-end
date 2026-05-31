@@ -6,6 +6,7 @@ import Catalog from "./pages/Catalog";
 import GameDetails from "./pages/GameDetails";
 import PublicProfile from "./pages/PublicProfile";
 import ProtectedRoute from "./components/ProtectRouter/ProtectedRoute";
+import Library from "./pages/Library";
 
 function App() {
   return (
@@ -29,6 +30,13 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/biblioteca"
+        element={
+          <ProtectedRoute>
+            <Library />
+          </ProtectedRoute>
+        } />
       <Route
         path="/jogos/:id"
         element={

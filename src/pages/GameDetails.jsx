@@ -107,9 +107,15 @@ function HeroSection({ game, status, onOpenReview }) {
   const [naWishlist, setNaWishlist] = useState(false);
   const [loadingWishlist, setLoadingWishlist] = useState(false);
 
+
+  const [naBiblioteca, setNaBiblioteca] = useState(false);
+  const [loadingBiblioteca, setLoadingBiblioteca] = useState(false);
+
+
   useEffect(() => {
     if (status) {
       setNaWishlist(status.naWishlist);
+      setNaBiblioteca(status.naBiblioteca);
     }
   }, [status]);
 
@@ -132,6 +138,28 @@ function HeroSection({ game, status, onOpenReview }) {
       });
     } finally {
       setLoadingWishlist(false);
+    }
+  }
+
+  async function adicionarBiblioteca() {
+    if (loadingBiblioteca) return;
+    setLoadingBiblioteca(true);
+    try {
+      await api.post(`/biblioteca/${game.id}`);
+      setNaBiblioteca(true);
+      swal.fire({
+        icon: "success",
+        title: "Sucesso!",
+        text: "Jogo adicionado à sua biblioteca.",
+      });
+    } catch (err) {
+      swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: err.response?.data?.erro || "Não foi possível adicionar à biblioteca.",
+      });
+    } finally {
+      setLoadingBiblioteca(false);
     }
   }
 
@@ -259,7 +287,7 @@ function HeroSection({ game, status, onOpenReview }) {
               gap: "8px",
             }}
           >
-            {status.naBiblioteca ? (
+            {naBiblioteca ? (
               <Badge
                 color="#10b981"
                 bg="rgba(16,185,129,0.1)"
@@ -268,13 +296,27 @@ function HeroSection({ game, status, onOpenReview }) {
                 ✓ Na biblioteca
               </Badge>
             ) : (
-              <Badge
-                color="#64748b"
-                bg="rgba(255,255,255,0.05)"
-                border="rgba(255,255,255,0.1)"
+              <button
+                onClick={adicionarBiblioteca}
+                disabled={loadingBiblioteca}
+                style={{
+                  background: "rgba(16,185,129,0.12)",
+                  color: "#10b981",
+                  border: "1px solid rgba(16,185,129,0.35)",
+                  padding: "4px 12px",
+                  borderRadius: "20px",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  fontSize: "0.78rem",
+                  fontFamily: "var(--font-sans)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  transition: "all 0.2s",
+                }}
               >
-                ✕ Não na biblioteca
-              </Badge>
+                {loadingBiblioteca ? "Adicionando..." : "+ Adicionar à biblioteca"}
+              </button>
             )}
 
             <button
