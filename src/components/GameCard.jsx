@@ -37,7 +37,7 @@ export default function GameCard({ game, variant = "catalog" }) {
       }}
     >
       {/* Cover image */}
-      <div style={{ position: "relative", aspectRatio: "16/10" }}>
+      <div style={{ position: "relative", height: "180px", width: "100%" }}>
         <GameCover game={game} />
         <div style={{ position: "absolute", top: "8px", left: "8px", display: "flex", flexDirection: "column", gap: "4px" }}>
           {isWithin30Days(game.createdAt) && (
