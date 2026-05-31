@@ -16,7 +16,6 @@ export default function Library() {
     useEffect(() => {
         async function carregarDados() {
             try {
-
                 const [biblioRes, userRes] = await Promise.all([
                     api.get('/biblioteca/me'),
                     api.get('/auth/me')
@@ -33,6 +32,49 @@ export default function Library() {
         }
         carregarDados();
     }, []);
+
+
+
+    async function salvarHoras(jogoId) {
+        const horas = parseInt(horasInput, 10);
+
+        if (isNaN(horas) || horas < 0 || horas > 99999) {
+            swal.fire({
+                icon: 'warning',
+                title: 'Valor inválido',
+                text: 'Insira um número de horas válido (entre 0 e 99999).',
+            });
+            return;
+        }
+
+        try {
+            await api.patch(`/biblioteca/${jogoId}`, { horasJogadas: horas });
+
+            setBiblioteca((prevBiblio) =>
+                prevBiblio.map((item) =>
+                    item.jogo.id === jogoId ? { ...item, horasJogadas: horas } : item
+                )
+            );
+
+            setEditandoId(null);
+
+            swal.fire({
+                icon: 'success',
+                title: 'Sucesso!',
+                text: 'Horas atualizadas com sucesso.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            console.error('Erro ao atualizar horas:', error);
+            swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: error.response?.data?.erro || 'Não foi possível atualizar as horas.',
+            });
+        }
+    }
+
     return (
         <Layout>
             <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 1.5rem 3rem' }}>
@@ -67,7 +109,6 @@ export default function Library() {
                             fontSize: '0.9rem',
                             fontWeight: 600,
                             transition: 'background 0.2s',
-
                             pointerEvents: matricula ? 'auto' : 'none',
                             opacity: matricula ? 1 : 0.5
                         }}
@@ -75,7 +116,6 @@ export default function Library() {
                         Meu Perfil 👤
                     </Link>
                 </div>
-
 
                 <h1 style={{
                     fontSize: '2rem',
@@ -88,7 +128,7 @@ export default function Library() {
                     Minha Biblioteca
                 </h1>
 
-                {/* JOGOS NA PARTE DE BAIXO */}
+
                 {loading ? (
                     <h2 style={{ color: 'var(--text-muted, #888)', textAlign: 'center' }}>Carregando sua biblioteca...</h2>
                 ) : erro ? (
@@ -128,7 +168,6 @@ export default function Library() {
                                     <p style={{ margin: '0 0 16px 0', fontSize: '0.85rem', color: 'var(--text-muted, #888)' }}>
                                         {item.jogo.desenvolvedora}
                                     </p>
-
 
                                     <div style={{
                                         marginTop: 'auto',
@@ -190,7 +229,7 @@ export default function Library() {
                                                         fontSize: '0.8rem',
                                                     }}
                                                 >
-                                                    ✏️ Editar
+                                                    Editar
                                                 </button>
                                             </>
                                         )}
