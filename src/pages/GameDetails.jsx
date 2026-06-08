@@ -16,14 +16,20 @@ export default function GameDetails() {
   const [error, setError] = useState("");
   const [showReviewModal, setShowReviewModal] = useState(false);
 
+  const [currentUser, setCurrentUser] = useState(null);
+  const [reviewEditando, setReviewEditando] = useState(null);
+
   async function fetchData() {
     try {
-      const [gameRes, statusRes] = await Promise.all([
+
+      const [gameRes, statusRes, userRes] = await Promise.all([
         api.get(`/jogos/${id}`),
         api.get(`/jogos/${id}/status`),
+        api.get('/auth/me').catch(() => ({ data: null }))
       ]);
       setGame(gameRes.data);
       setStatus(statusRes.data);
+      setCurrentUser(userRes.data);
     } catch (err) {
       console.error("GameDetails fetch error:", err);
       setError(
@@ -74,15 +80,48 @@ export default function GameDetails() {
               <ReviewsSection
                 reviews={game.reviews}
                 onUserClick={(matricula) => navigate(`/perfil/${matricula}`)}
+                currentUser={currentUser}
+                onEdit={(review) => {
+                  setReviewEditando(review);
+                  setShowReviewModal(true);
+                }}
+                onDelete={async (reviewId) => {
+                  const confirmar = await swal.fire({
+                    title: "Tem certeza?",
+                    text: "Sua review será excluída permanentemente!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#ef4444",
+                    cancelButtonColor: "#3b82f6",
+                    confirmButtonText: "Sim, excluir!",
+                    cancelButtonText: "Cancelar"
+                  });
+
+                  if (confirmar.isConfirmed) {
+                    try {
+                      await api.delete(`/reviews/${reviewId}`);
+                      swal.fire("Excluída!", "Sua review foi removida.", "success");
+                      fetchData();
+                    } catch (err) {
+                      swal.fire("Erro", "Não foi possível excluir a review.", "error");
+                    }
+                  }
+                }}
               />
             )}
+
             {showReviewModal && (
               <ReviewModal
                 gameId={id}
                 gameTitle={game.titulo}
-                onClose={() => setShowReviewModal(false)}
+                reviewEditando={reviewEditando}
+                onClose={() => {
+                  setShowReviewModal(false);
+                  setReviewEditando(null);
+                }}
                 onSuccess={() => {
                   setShowReviewModal(false);
+                  setReviewEditando(null);
                   setLoading(true);
                   fetchData();
                 }}
@@ -495,7 +534,7 @@ function AchievementsSection({ conquistas }) {
   );
 }
 
-function ReviewsSection({ reviews, onUserClick }) {
+function ReviewsSection({ reviews, onUserClick, currentUser, onEdit, onDelete }) {
   return (
     <SectionBlock title={`Reviews · ${reviews.length}`}>
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -509,52 +548,36 @@ function ReviewsSection({ reviews, onUserClick }) {
               padding: "16px",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "8px",
-              }}
-            >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
               <button
-                onClick={() =>
-                  r.autor?.matricula && onUserClick(r.autor.matricula)
-                }
+                onClick={() => r.autor?.matricula && onUserClick(r.autor.matricula)}
                 style={{
-                  background: "none",
-                  border: "none",
-                  cursor: r.autor?.matricula ? "pointer" : "default",
-                  color: "var(--color-secondary)",
-                  fontWeight: 600,
-                  fontSize: "0.875rem",
-                  padding: 0,
-                  fontFamily: "var(--font-sans)",
+                  background: "none", border: "none", cursor: r.autor?.matricula ? "pointer" : "default",
+                  color: "var(--color-secondary)", fontWeight: 600, fontSize: "0.875rem", padding: 0, fontFamily: "var(--font-sans)",
                 }}
               >
                 {toTitleCase(r.autor?.nome ?? "Usuário")}
               </button>
-              <span
-                style={{
-                  color: "#f59e0b",
-                  fontWeight: 700,
-                  fontSize: "0.875rem",
-                }}
-              >
+              <span style={{ color: "#f59e0b", fontWeight: 700, fontSize: "0.875rem" }}>
                 ★ {r.nota}/10
               </span>
             </div>
             {r.texto && (
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: "0.875rem",
-                  color: "var(--text-secondary)",
-                  lineHeight: 1.65,
-                }}
-              >
+              <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.65 }}>
                 "{r.texto}"
               </p>
+            )}
+
+
+            {currentUser && r.autor?.matricula === currentUser.matricula && (
+              <div style={{ display: "flex", gap: "8px", marginTop: "12px", borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "12px" }}>
+                <button onClick={() => onEdit(r)} style={{ background: "rgba(59, 130, 246, 0.1)", border: "1px solid #3b82f6", color: "#3b82f6", padding: "4px 12px", borderRadius: "6px", cursor: "pointer", fontSize: "0.8rem" }}>
+                  Editar
+                </button>
+                <button onClick={() => onDelete(r.id)} style={{ background: "rgba(239, 68, 68, 0.1)", border: "1px solid #ef4444", color: "#ef4444", padding: "4px 12px", borderRadius: "6px", cursor: "pointer", fontSize: "0.8rem" }}>
+                  Excluir
+                </button>
+              </div>
             )}
           </div>
         ))}
@@ -562,7 +585,6 @@ function ReviewsSection({ reviews, onUserClick }) {
     </SectionBlock>
   );
 }
-
 function SectionBlock({ title, children }) {
   return (
     <section style={{ marginBottom: "2.5rem" }}>
@@ -638,10 +660,10 @@ function DetailsSkeleton() {
   );
 }
 
-function ReviewModal({ gameId, gameTitle, onClose, onSuccess }) {
-  const [nota, setNota] = useState(null);
-  const [texto, setTexto] = useState("");
-  const [recomenda, setRecomenda] = useState(null);
+function ReviewModal({ gameId, gameTitle, reviewEditando, onClose, onSuccess }) {
+  const [nota, setNota] = useState(reviewEditando ? reviewEditando.nota : null);
+  const [texto, setTexto] = useState(reviewEditando ? reviewEditando.texto : "");
+  const [recomenda, setRecomenda] = useState(reviewEditando ? reviewEditando.recomenda : null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
@@ -660,7 +682,13 @@ function ReviewModal({ gameId, gameTitle, onClose, onSuccess }) {
     }
     setLoading(true);
     try {
-      await api.post(`/jogos/${gameId}/reviews`, { nota, texto, recomenda });
+      if (reviewEditando) {
+
+        await api.patch(`/reviews/${reviewEditando.id}`, { nota, texto, recomenda });
+      } else {
+
+        await api.post(`/jogos/${gameId}/reviews`, { nota, texto, recomenda });
+      }
       onSuccess();
     } catch (err) {
       swal.fire({
@@ -702,7 +730,10 @@ function ReviewModal({ gameId, gameTitle, onClose, onSuccess }) {
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem" }}>
           <div>
-            <h2 style={{ margin: "0 0 4px", fontSize: "1.2rem", fontWeight: 800 }}>Escrever review</h2>
+
+            <h2 style={{ margin: "0 0 4px", fontSize: "1.2rem", fontWeight: 800 }}>
+              {reviewEditando ? "Editar review" : "Escrever review"}
+            </h2>
             <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--text-muted)" }}>{gameTitle}</p>
           </div>
           <button
