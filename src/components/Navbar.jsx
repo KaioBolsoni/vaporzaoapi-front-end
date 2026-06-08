@@ -21,6 +21,7 @@ function getUserInitials(nome = "") {
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const [menuAberto, setMenuAberto] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -64,7 +65,7 @@ export default function Navbar() {
         flexShrink: 0,
       }}
     >
-      {/* Logo */}
+
       <Link
         to="/"
         style={{
@@ -82,7 +83,7 @@ export default function Navbar() {
         </span>
       </Link>
 
-      {/* Nav links */}
+
       <div className="nav-links">
         {NAV_LINKS.map((link) => {
           const isActive = location.pathname === link.to;
@@ -117,12 +118,11 @@ export default function Navbar() {
         })}
       </div>
 
-      {/* Search bar */}
       <div className="navbar-search">
         <SearchBar />
       </div>
 
-      {/* Right side */}
+
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginLeft: "auto" }}>
         {user && (
           <Link
@@ -203,7 +203,14 @@ export default function Navbar() {
                 <DropdownItem onClick={() => { navigate(`/perfil/${user.matricula}`); setDropdownOpen(false); }}>
                   👤 Meu Perfil
                 </DropdownItem>
+
+                {/* NOVA OPÇÃO AQUI */}
+                <DropdownItem onClick={() => { navigate("/criar-jogo"); setDropdownOpen(false); }}>
+                  ➕ Criar Jogo
+                </DropdownItem>
+
                 <div style={{ height: "1px", background: "rgba(255,255,255,0.06)", margin: "4px 0" }} />
+
                 <DropdownItem onClick={handleLogout} danger>
                   🚪 Sair
                 </DropdownItem>

@@ -8,6 +8,7 @@ import PublicProfile from "./pages/PublicProfile";
 import ProtectedRoute from "./components/ProtectRouter/ProtectedRoute";
 import Library from "./pages/Library";
 import Wishlist from "./pages/Wishlist";
+import CreateGame from "./pages/CreateGame";
 
 function App() {
   return (
@@ -20,6 +21,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/criar-jogo"
+        element={
+          <ProtectedRoute>
+            <CreateGame />
           </ProtectedRoute>
         }
       />
