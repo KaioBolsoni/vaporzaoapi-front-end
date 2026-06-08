@@ -125,6 +125,13 @@ export default function PublicProfile() {
 }
 
 function ProfileCard({ profile, isOwnProfile }) {
+
+  const [editando, setEditando] = useState(false);
+  const [novoNome, setNovoNome] = useState("");
+
+
+  if (!profile) return null;
+
   const displayName = toTitleCase(profile.nome || "");
   const initials = getUserInitials(displayName);
 
@@ -234,13 +241,66 @@ function ProfileCard({ profile, isOwnProfile }) {
           )}
         </div>
 
+
         {isOwnProfile && (
-          <button
-            className="btn btn-outline"
-            style={{ fontSize: "0.85rem", flexShrink: 0 }}
-          >
-            ⚙ Editar perfil
-          </button>
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            {editando ? (
+              <>
+                <input
+                  value={novoNome}
+                  onChange={(e) => setNovoNome(e.target.value)}
+                  style={{
+                    padding: "6px",
+                    borderRadius: "4px",
+                    border: "1px solid #444",
+                    background: "#222",
+                    color: "#fff",
+                  }}
+                />
+                <button
+                  style={{
+                    background: "#10b981",
+                    color: "#fff",
+                    border: "none",
+                    padding: "6px 12px",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => {
+                    try {
+                      await api.patch("/usuarios/me", { nome: novoNome });
+                      setEditando(false);
+                      window.location.reload();
+                    } catch (err) {
+                      alert("Não foi possível atualizar o nome.");
+                    }
+                  }}
+                >
+                  Salvar
+                </button>
+                <button
+                  className="btn btn-outline"
+                  style={{ fontSize: "0.85rem", padding: "6px 12px", cursor: "pointer" }}
+                  onClick={() => setEditando(false)}
+                >
+                  Cancelar
+                </button>
+              </>
+            ) : (
+              <button
+                className="btn btn-outline"
+                style={{ fontSize: "0.85rem", flexShrink: 0, cursor: "pointer" }}
+                onClick={() => {
+                  setNovoNome(profile.nome);
+                  setEditando(true);
+                }}
+              >
+                ⚙ Editar perfil
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>
@@ -396,10 +456,10 @@ function GamesSection({ jogos, isOwnProfile }) {
         {jogos.map((game) => (
           <div key={game.id} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
 
-            {/* O Cartão do Jogo Original */}
+
             <GameCard game={game} variant="catalog" />
 
-            {/* NOVO BOTÃO: Gerenciar Jogo (Só aparece se for o dono do perfil) */}
+
             {isOwnProfile && (
               <Link
                 to={`/gerenciar-jogo/${game.id}`}
