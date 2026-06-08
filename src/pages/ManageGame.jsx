@@ -17,6 +17,10 @@ export default function ManageGame() {
     const [capaUrl, setCapaUrl] = useState("");
     const [generoIds, setGeneroIds] = useState([]);
     const [imagensAtuais, setImagensAtuais] = useState([]);
+    const [conquistasAtuais, setConquistasAtuais] = useState([]);
+    const [novaConquistaTitulo, setNovaConquistaTitulo] = useState("");
+    const [novaConquistaDescricao, setNovaConquistaDescricao] = useState("");
+    const [adicionandoConquista, setAdicionandoConquista] = useState(false);
 
 
     const [novaImagemUrl, setNovaImagemUrl] = useState("");
@@ -46,6 +50,7 @@ export default function ManageGame() {
                 setCapaUrl(jogo.capaUrl || "");
                 setGeneroIds(jogo.generos.map((g) => g.id));
                 setImagensAtuais(jogo.imagens || []);
+                setConquistasAtuais(jogo.conquistas || []);
 
                 setGenerosDisponiveis(generosRes.data);
             } catch (error) {
@@ -90,7 +95,26 @@ export default function ManageGame() {
             setSalvando(false);
         }
     }
+    async function handleAdicionarConquista(e) {
+        e.preventDefault();
+        if (!novaConquistaTitulo) return;
+        setAdicionandoConquista(true);
+        try {
+            const response = await api.post(`/jogos/${id}/conquistas`, {
+                titulo: novaConquistaTitulo,
+                descricao: novaConquistaDescricao || null
+            });
 
+            setConquistasAtuais([...conquistasAtuais, response.data]);
+            setNovaConquistaTitulo("");
+            setNovaConquistaDescricao("");
+            swal.fire("Sucesso!", "Conquista adicionada.", "success");
+        } catch (error) {
+            swal.fire("Erro", "Não foi possível adicionar a conquista.", "error");
+        } finally {
+            setAdicionandoConquista(false);
+        }
+    }
     async function handleAdicionarImagem(e) {
         e.preventDefault();
         if (!novaImagemUrl) return;
@@ -177,7 +201,6 @@ export default function ManageGame() {
                     </button>
                 </form>
 
-                {/* SEÇÃO DE IMAGENS */}
                 <div style={{ ...formBoxStyle, marginTop: "2rem" }}>
                     <h2 style={{ fontSize: "1.3rem", marginBottom: "1rem", color: "#10b981" }}>Galeria de Imagens</h2>
 
@@ -206,6 +229,32 @@ export default function ManageGame() {
                     ) : (
                         <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Nenhuma imagem adicionada ainda.</p>
                     )}
+                    <div style={{ ...formBoxStyle, marginTop: "2rem" }}>
+                        <h2 style={{ fontSize: "1.3rem", marginBottom: "1rem", color: "#f59e0b" }}>Conquistas</h2>
+
+                        <form onSubmit={handleAdicionarConquista} style={{ display: "flex", gap: "10px", alignItems: "flex-end", marginBottom: "1.5rem", flexWrap: "wrap" }}>
+                            <div style={{ flex: "1 1 200px" }}>
+                                <label style={labelStyle}>Título *</label>
+                                <input type="text" required value={novaConquistaTitulo} onChange={(e) => setNovaConquistaTitulo(e.target.value)} style={inputStyle} />
+                            </div>
+                            <div style={{ flex: "1 1 300px" }}>
+                                <label style={labelStyle}>Descrição</label>
+                                <input type="text" value={novaConquistaDescricao} onChange={(e) => setNovaConquistaDescricao(e.target.value)} style={inputStyle} />
+                            </div>
+                            <button type="submit" disabled={adicionandoConquista} style={{ ...buttonStyle, background: "#f59e0b" }}>
+                                {adicionandoConquista ? "Salvando..." : "Adicionar"}
+                            </button>
+                        </form>
+
+                        <div style={{ display: "grid", gap: "10px" }}>
+                            {conquistasAtuais.map((c, idx) => (
+                                <div key={idx} style={{ background: "rgba(0,0,0,0.2)", padding: "10px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                                    <span style={{ fontWeight: 600 }}>🏆 {c.titulo}</span>
+                                    {c.descricao && <p style={{ margin: "4px 0 0", fontSize: "0.8rem", color: "#aaa" }}>{c.descricao}</p>}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </Layout>
