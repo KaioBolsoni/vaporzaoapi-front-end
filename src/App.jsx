@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectRouter/ProtectedRoute";
 import Library from "./pages/Library";
 import Wishlist from "./pages/Wishlist";
 import CreateGame from "./pages/CreateGame";
+import ManageGame from "./pages/ManageGame";
 
 function App() {
   return (
@@ -29,6 +30,14 @@ function App() {
         element={
           <ProtectedRoute>
             <CreateGame />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/gerenciar-jogo/:id"
+        element={
+          <ProtectedRoute>
+            <ManageGame />
           </ProtectedRoute>
         }
       />

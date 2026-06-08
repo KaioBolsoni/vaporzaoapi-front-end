@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
@@ -367,13 +367,21 @@ function GamesSection({ jogos, isOwnProfile }) {
             {jogos.length} jogo(s)
           </p>
         </div>
+
+        {/* BOTÃO ATUALIZADO: Agora leva para a tela de Criar Jogo */}
         {isOwnProfile && (
-          <button
+          <Link
+            to="/criar-jogo"
             className="btn btn-outline"
-            style={{ fontSize: "0.8rem", padding: "6px 14px" }}
+            style={{
+              fontSize: "0.8rem",
+              padding: "6px 14px",
+              textDecoration: "none",
+              display: "inline-block"
+            }}
           >
             + Criar novo
-          </button>
+          </Link>
         )}
       </div>
 
@@ -386,7 +394,36 @@ function GamesSection({ jogos, isOwnProfile }) {
         }}
       >
         {jogos.map((game) => (
-          <GameCard key={game.id} game={game} variant="catalog" />
+          <div key={game.id} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+
+            {/* O Cartão do Jogo Original */}
+            <GameCard game={game} variant="catalog" />
+
+            {/* NOVO BOTÃO: Gerenciar Jogo (Só aparece se for o dono do perfil) */}
+            {isOwnProfile && (
+              <Link
+                to={`/gerenciar-jogo/${game.id}`}
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  padding: "8px",
+                  background: "rgba(139,92,246,0.12)",
+                  color: "#a78bfa",
+                  border: "1px solid rgba(139,92,246,0.3)",
+                  borderRadius: "8px",
+                  textDecoration: "none",
+                  fontSize: "0.85rem",
+                  fontWeight: "bold",
+                  transition: "background 0.2s"
+                }}
+                onMouseEnter={(e) => e.target.style.background = "rgba(139,92,246,0.22)"}
+                onMouseLeave={(e) => e.target.style.background = "rgba(139,92,246,0.12)"}
+              >
+                ⚙️ Gerenciar Jogo
+              </Link>
+            )}
+
+          </div>
         ))}
       </div>
     </section>
