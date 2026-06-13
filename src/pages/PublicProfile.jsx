@@ -269,8 +269,12 @@ function ProfileCard({ profile, isOwnProfile }) {
                     fontWeight: "bold",
                   }}
                   onClick={async () => {
+                    if (!novoNome.trim()) {
+                      alert("O nome não pode ficar vazio.");
+                      return;
+                    }
                     try {
-                      await api.patch("/usuarios/me", { nome: novoNome });
+                      await api.patch("/usuarios/me", { nome: novoNome.trim() });
                       setEditando(false);
                       window.location.reload();
                     } catch (err) {
