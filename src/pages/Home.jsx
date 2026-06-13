@@ -41,10 +41,8 @@ export default function Home() {
   return (
     <Layout>
       <div className="home-layout">
-        {/* Left sidebar */}
         <LeftSidebar generos={generos} totalJogos={totalJogos} />
 
-        {/* Main content */}
         <main className="home-main">
           {loading ? (
             <HomeSkeleton />
@@ -68,7 +66,6 @@ export default function Home() {
           )}
         </main>
 
-        {/* Right sidebar */}
         {!loading && destaques.length > 0 && (
           <div className="home-sidebar-right">
             <RightSidebar games={destaques} activeId={heroGame?.id} />
@@ -244,7 +241,6 @@ function HeroBanner({ game }) {
         justifyContent: "flex-end",
       }}
     >
-      {/* Large bg initials */}
       <div
         style={{
           position: "absolute",
@@ -263,7 +259,6 @@ function HeroBanner({ game }) {
         {initials}
       </div>
 
-      {/* Content */}
       <div style={{ position: "relative", zIndex: 1, maxWidth: "60%" }}>
         <div
           style={{

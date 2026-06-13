@@ -36,7 +36,6 @@ export default function GameCard({ game, variant = "catalog" }) {
         e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
       }}
     >
-      {/* Cover image */}
       <div style={{ position: "relative", height: "180px", width: "100%" }}>
         <GameCover game={game} />
         <div style={{ position: "absolute", top: "8px", left: "8px", display: "flex", flexDirection: "column", gap: "4px" }}>
@@ -89,7 +88,6 @@ export default function GameCard({ game, variant = "catalog" }) {
         )}
       </div>
 
-      {/* Info */}
       <div style={{ padding: "12px 14px", flex: 1, display: "flex", flexDirection: "column", gap: "5px" }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "6px" }}>
           <span
