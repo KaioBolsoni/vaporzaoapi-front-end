@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import swal from "../utils/swal";
+import { useForm } from "../hooks/useForm";
 
 const STARS = [
   { x: "10%",  y: "15%", r: 2,   delay: "0s",   dur: "2.2s" },
@@ -76,11 +77,10 @@ function Ghost({ mousePos, watching, size = 90, color = "#8b5cf6", animName, ani
 }
 
 export default function Login() {
-  const [identifier, setIdentifier] = useState("");
-  const [password,   setPassword]   = useState("");
-  const [showPass,   setShowPass]   = useState(false);
-  const [loading,    setLoading]    = useState(false);
-  const [mousePos,   setMousePos]   = useState({ x: 0, y: 0 });
+  const [form, onChange] = useForm({ identifier: "", password: "" });
+  const [showPass, setShowPass] = useState(false);
+  const [loading,  setLoading]  = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   const navigate = useNavigate();
   const { token, login, loading: authLoading } = useAuth();
@@ -97,13 +97,13 @@ export default function Login() {
 
   async function handleLogin(e) {
     e.preventDefault();
-    if (!identifier.trim() || !password.trim()) {
+    if (!form.identifier.trim() || !form.password.trim()) {
       swal.fire({ icon: "warning", title: "Campos obrigatórios", text: "Preencha sua matrícula e senha." });
       return;
     }
     setLoading(true);
     try {
-      const res = await api.post("/auth/login", { matricula: identifier, senha: password });
+      const res = await api.post("/auth/login", { matricula: form.identifier, senha: form.password });
       login(res.data.token, res.data.usuario);
       navigate("/");
     } catch (err) {
@@ -281,9 +281,10 @@ export default function Login() {
                 <input
                   className="form-input"
                   type="text"
+                  name="identifier"
                   placeholder="00000.0000"
-                  value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
+                  value={form.identifier}
+                  onChange={onChange}
                   autoComplete="username"
                 />
               </div>
@@ -301,9 +302,10 @@ export default function Login() {
                 <input
                   className="form-input"
                   type={showPass ? "text" : "password"}
+                  name="password"
                   placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={form.password}
+                  onChange={onChange}
                   autoComplete="current-password"
                   style={{ paddingRight: "2.8rem" }}
                 />

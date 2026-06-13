@@ -10,6 +10,7 @@ import Library from "./pages/Library";
 import Wishlist from "./pages/Wishlist";
 import CreateGame from "./pages/CreateGame";
 import ManageGame from "./pages/ManageGame";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
