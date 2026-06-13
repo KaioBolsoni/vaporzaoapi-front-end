@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import api from "../services/api";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
+import { useGeneros } from "../hooks/useGeneros";
+import { useJogos } from "../hooks/useJogos";
 
 const SORT_OPTIONS = [
   { value: "titulo", label: "A–Z" },
@@ -19,10 +20,10 @@ const PRICE_OPTIONS = [
 
 export default function Catalog() {
   const location = useLocation();
-  const [jogos, setJogos] = useState([]);
-  const [generos, setGeneros] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { jogos, loading: loadingJogos } = useJogos();
+  const { generos, loading: loadingGeneros } = useGeneros();
+  const loading = loadingJogos || loadingGeneros;
+  const [error] = useState("");
   const [search, setSearch] = useState(() => {
     return location.state?.search || "";
   });
@@ -46,34 +47,6 @@ export default function Catalog() {
     setPrevSearch(location.state?.search);
     setSearch(location.state?.search || "");
   }
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [jogosRes, generosRes] = await Promise.all([
-          api.get("/jogos?limite=100"),
-          api.get("/generos"),
-        ]);
-
-        // API returns { pagina, limite, total, paginas, itens: [...] }
-        const raw = jogosRes.data;
-        const jogosArray = Array.isArray(raw)
-          ? raw
-          : Array.isArray(raw?.itens)
-          ? raw.itens
-          : [];
-
-        setJogos(jogosArray);
-        setGeneros(Array.isArray(generosRes.data) ? generosRes.data : []);
-      } catch (err) {
-        console.error("Catalog fetch error:", err);
-        setError("Erro ao carregar o catálogo.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
 
   function toggleGenre(id) {
     setSelectedGenres((prev) =>

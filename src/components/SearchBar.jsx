@@ -1,21 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import { useJogos } from "../hooks/useJogos";
 
 export default function SearchBar() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
-  const [games, setGames] = useState([]);
-
-  useEffect(() => {
-    api.get("/jogos?limite=100")
-      .then((res) => {
-        const raw = res.data;
-        const list = Array.isArray(raw) ? raw : raw?.itens || [];
-        setGames(list);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+  const { jogos: games } = useJogos();
 
   const filtered = query.trim()
     ? games
