@@ -7,7 +7,7 @@ export default function ProtectedRoute({ children }) {
   if (loading) {
     return (
       <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-        <h2>Verifying session...</h2>
+        <h2>Verificando sessão...</h2>
       </div>
     );
   }
