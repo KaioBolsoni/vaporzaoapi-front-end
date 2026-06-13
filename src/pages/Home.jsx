@@ -146,7 +146,7 @@ function LeftSidebar({ generos, totalJogos }) {
         <ShortcutLink
           icon="+"
           label="Criar jogo"
-          onClick={() => navigate("/jogos/novo")}
+          onClick={() => navigate("/criar-jogo")}
           accent
         />
       </ul>
