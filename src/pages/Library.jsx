@@ -5,6 +5,7 @@ import swal from '../utils/swal';
 import Layout from '../components/Layout';
 import PageTitle from '../components/PageTitle';
 import EmptyState from '../components/EmptyState';
+import ErrorCard from '../components/ErrorCard';
 
 export default function Library() {
     const [biblioteca, setBiblioteca] = useState([]);
@@ -170,9 +171,9 @@ export default function Library() {
 
 
                 {loading ? (
-                    <h2 style={{ color: 'var(--text-muted, #888)', textAlign: 'center' }}>Carregando sua biblioteca...</h2>
+                    <LibrarySkeleton />
                 ) : erro ? (
-                    <h2 style={{ color: 'var(--color-error, #ef4444)', textAlign: 'center' }}>{erro}</h2>
+                    <ErrorCard message={erro} />
                 ) : biblioteca.length === 0 ? (
                     <EmptyState message="Você ainda não adicionou nenhum jogo à sua biblioteca." />
                 ) : (
@@ -296,4 +297,14 @@ export default function Library() {
             </div>
         </Layout>
     );
+}
+
+function LibrarySkeleton() {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '20px' }}>
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="skeleton" style={{ height: '380px', borderRadius: '12px' }} />
+      ))}
+    </div>
+  );
 }

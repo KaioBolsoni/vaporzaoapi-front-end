@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 import GameCard from '../components/GameCard';
 import PageTitle from '../components/PageTitle';
 import EmptyState from '../components/EmptyState';
+import ErrorCard from '../components/ErrorCard';
 import swal from '../utils/swal';
 
 export default function Wishlist() {
@@ -65,9 +66,9 @@ export default function Wishlist() {
             <div style={{ padding: '2rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
                 <PageTitle>Minha Wishlist</PageTitle>
                 {loading ? (
-                    <p style={{ color: 'var(--text-muted)' }}>Carregando...</p>
+                    <WishlistSkeleton />
                 ) : erro ? (
-                    <p style={{ color: 'var(--color-error)' }}>{erro}</p>
+                    <ErrorCard message={erro} />
                 ) : wishlist.length === 0 ? (
                     <EmptyState message="Sua wishlist está vazia." />
                 ) : (
@@ -114,4 +115,14 @@ export default function Wishlist() {
             </div>
         </Layout>
     );
+}
+
+function WishlistSkeleton() {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '18px' }}>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="skeleton" style={{ height: '310px', borderRadius: '10px' }} />
+      ))}
+    </div>
+  );
 }
