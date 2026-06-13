@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import swal from "../utils/swal";
 import Layout from "../components/Layout";
+import { useGeneros } from "../hooks/useGeneros";
 
 export default function ManageGame() {
     const { id } = useParams();
@@ -27,7 +28,7 @@ export default function ManageGame() {
     const [novaImagemLegenda, setNovaImagemLegenda] = useState("");
 
 
-    const [generosDisponiveis, setGenerosDisponiveis] = useState([]);
+    const { generos: generosDisponiveis } = useGeneros();
     const [loading, setLoading] = useState(true);
     const [salvando, setSalvando] = useState(false);
     const [adicionandoImg, setAdicionandoImg] = useState(false);
@@ -35,10 +36,7 @@ export default function ManageGame() {
     useEffect(() => {
         async function carregarDados() {
             try {
-                const [jogoRes, generosRes] = await Promise.all([
-                    api.get(`/jogos/${id}`),
-                    api.get("/generos")
-                ]);
+                const jogoRes = await api.get(`/jogos/${id}`);
 
                 const jogo = jogoRes.data;
                 setTitulo(jogo.titulo);
@@ -51,8 +49,6 @@ export default function ManageGame() {
                 setGeneroIds(jogo.generos.map((g) => g.id));
                 setImagensAtuais(jogo.imagens || []);
                 setConquistasAtuais(jogo.conquistas || []);
-
-                setGenerosDisponiveis(generosRes.data);
             } catch (error) {
                 console.error("Erro ao carregar dados:", error);
                 swal.fire("Erro", "Não foi possível carregar os dados do jogo.", "error");

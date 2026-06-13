@@ -5,26 +5,23 @@ import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
 import GameCover from "../components/GameCover";
 import { getGameGradient, getGameInitials } from "../utils/gameColors";
+import { useGeneros } from "../hooks/useGeneros";
 
 export default function Home() {
   const [recentes, setRecentes] = useState([]);
   const [topAvaliados, setTopAvaliados] = useState([]);
   const [populares, setPopulares] = useState([]);
-  const [generos, setGeneros] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { generos } = useGeneros();
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [destaquesRes, generosRes] = await Promise.all([
-          api.get("/jogos/destaques"),
-          api.get("/generos"),
-        ]);
+        const destaquesRes = await api.get("/jogos/destaques");
         const d = destaquesRes.data || {};
         setRecentes(d.recentes || []);
         setTopAvaliados(d.topAvaliados || []);
         setPopulares(d.populares || []);
-        setGeneros(generosRes.data || []);
       } catch (err) {
         console.error("Home fetch error:", err);
       } finally {

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import swal from "../utils/swal";
 import Layout from "../components/Layout";
+import { useGeneros } from "../hooks/useGeneros";
 
 export default function CreateGame() {
     const navigate = useNavigate();
@@ -17,29 +18,8 @@ export default function CreateGame() {
     const [generoIds, setGeneroIds] = useState([]);
 
 
-    const [generosDisponiveis, setGenerosDisponiveis] = useState([]);
+    const { generos: generosDisponiveis, loading: loadingGeneros } = useGeneros();
     const [loading, setLoading] = useState(false);
-    const [loadingGeneros, setLoadingGeneros] = useState(true);
-
-
-    useEffect(() => {
-        async function carregarGeneros() {
-            try {
-                const response = await api.get("/generos");
-                setGenerosDisponiveis(response.data);
-            } catch (error) {
-                console.error("Erro ao carregar gêneros:", error);
-                swal.fire({
-                    icon: "error",
-                    title: "Erro",
-                    text: "Não foi possível carregar os gêneros.",
-                });
-            } finally {
-                setLoadingGeneros(false);
-            }
-        }
-        carregarGeneros();
-    }, []);
 
 
     function handleGeneroToggle(id) {
