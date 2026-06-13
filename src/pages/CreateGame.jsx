@@ -66,7 +66,7 @@ export default function CreateGame() {
 
         try {
 
-            const dataIso = new Date(lancamento).toISOString();
+            const dataIso = new Date(lancamento + "T12:00:00").toISOString();
 
             const payload = {
                 titulo,

@@ -83,7 +83,7 @@ export default function ManageGame() {
                 descricao,
                 preco: parseFloat(preco),
                 desenvolvedora,
-                lancamento: new Date(lancamento).toISOString(),
+                lancamento: new Date(lancamento + "T12:00:00").toISOString(),
                 capaUrl: capaUrl || null,
                 generoIds,
             };
