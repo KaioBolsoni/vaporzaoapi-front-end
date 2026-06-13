@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import SearchBar from "./SearchBar";
+import { getUserInitials } from "../utils/userUtils";
 
 function getUserHandle(nome = "") {
   const parts = nome.toLowerCase().split(" ").filter(Boolean);
@@ -10,13 +11,6 @@ function getUserHandle(nome = "") {
   if (parts.length === 1) return first;
   const last = parts[parts.length - 1];
   return `${first}.${last.slice(0, 3)}`;
-}
-
-function getUserInitials(nome = "") {
-  const parts = nome.split(" ").filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0][0].toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
 export default function Navbar() {
@@ -127,7 +121,6 @@ export default function Navbar() {
       </div>
 
 
-      {/* Hambúrguer mobile */}
       <button
         className="nav-hamburger"
         onClick={() => setMenuAberto(v => !v)}
@@ -150,7 +143,6 @@ export default function Navbar() {
         </svg>
       </button>
 
-      {/* Menu mobile expandido */}
       {menuAberto && (
         <div style={{
           position: "absolute",
@@ -293,8 +285,6 @@ export default function Navbar() {
                 <DropdownItem onClick={() => { navigate(`/perfil/${user.matricula}`); setDropdownOpen(false); }}>
                   👤 Meu Perfil
                 </DropdownItem>
-
-                {/* NOVA OPÇÃO AQUI */}
                 <DropdownItem onClick={() => { navigate("/criar-jogo"); setDropdownOpen(false); }}>
                   ➕ Criar Jogo
                 </DropdownItem>

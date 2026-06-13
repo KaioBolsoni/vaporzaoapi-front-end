@@ -1,32 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
+import swal from "../utils/swal";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
 import ErrorCard from "../components/ErrorCard";
 import EmptyState from "../components/EmptyState";
 import { useAuth } from "../context/AuthContext";
-import {
-  getGameGradient,
-  getGameInitials,
-  toTitleCase,
-} from "../utils/gameColors";
-
-function formatDate(dateStr) {
-  if (!dateStr) return "";
-  return new Date(dateStr).toLocaleDateString("pt-BR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
-
-function getUserInitials(nome = "") {
-  const parts = nome.split(" ").filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0][0].toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
+import { getGameGradient, getGameInitials, toTitleCase } from "../utils/gameColors";
+import { getUserInitials, formatDate } from "../utils/userUtils";
 
 export default function PublicProfile() {
   const { matricula } = useParams();
@@ -73,7 +55,11 @@ export default function PublicProfile() {
           <ErrorCard message={error} onAction={() => navigate(-1)} actionLabel="Voltar" />
         ) : (
           <div className="animate-slide-up">
-            <ProfileCard profile={profile} isOwnProfile={isOwnProfile} />
+            <ProfileCard
+              profile={profile}
+              isOwnProfile={isOwnProfile}
+              onNameUpdate={(newName) => setProfile((prev) => ({ ...prev, nome: newName }))}
+            />
             <StatsRow profile={profile} />
 
             {profile.jogosCriados?.length > 0 && (
@@ -100,7 +86,7 @@ export default function PublicProfile() {
   );
 }
 
-function ProfileCard({ profile, isOwnProfile }) {
+function ProfileCard({ profile, isOwnProfile, onNameUpdate }) {
 
   const [editando, setEditando] = useState(false);
   const [novoNome, setNovoNome] = useState("");
@@ -246,15 +232,15 @@ function ProfileCard({ profile, isOwnProfile }) {
                   }}
                   onClick={async () => {
                     if (!novoNome.trim()) {
-                      alert("O nome não pode ficar vazio.");
+                      swal.fire({ icon: "warning", title: "Atenção", text: "O nome não pode ficar vazio." });
                       return;
                     }
                     try {
                       await api.patch("/usuarios/me", { nome: novoNome.trim() });
                       setEditando(false);
-                      window.location.reload();
+                      onNameUpdate(novoNome.trim());
                     } catch (err) {
-                      alert("Não foi possível atualizar o nome.");
+                      swal.fire({ icon: "error", title: "Erro", text: "Não foi possível atualizar o nome." });
                     }
                   }}
                 >
