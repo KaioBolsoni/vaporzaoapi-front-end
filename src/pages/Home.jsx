@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Layout from "../components/Layout";
-import GameCard from "../components/GameCard";
-import GameCover from "../components/GameCover";
+import Chip from "../components/Chip";
+import GameSection from "../components/GameSection";
+import SidebarSection from "../components/SidebarSection";
 import { getGameGradient, getGameInitials } from "../utils/gameColors";
 import { useGeneros } from "../hooks/useGeneros";
 
@@ -83,70 +84,48 @@ function LeftSidebar({ generos, totalJogos }) {
 
   return (
     <aside className="home-sidebar-left">
-      <p
-        style={{
-          fontSize: "0.65rem",
-          fontWeight: 700,
-          color: "var(--text-muted)",
-          letterSpacing: "1.5px",
-          textTransform: "uppercase",
-          marginBottom: "10px",
-        }}
-      >
-        Categorias
-      </p>
-
-      <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px" }}>
-        <SidebarCategory
-          label="Todos os jogos"
-          count={totalJogos}
-          active
-          onClick={() => navigate("/catalogo")}
-          icon="✦"
-        />
-        {generos.map((g) => (
+      <SidebarSection label="Categorias">
+        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
           <SidebarCategory
-            key={g.id}
-            label={g.nome}
-            count={g._count?.jogos}
-            onClick={() =>
-              navigate("/catalogo", { state: { genreId: Number(g.id) } })
-            }
+            label="Todos os jogos"
+            count={totalJogos}
+            active
+            onClick={() => navigate("/catalogo")}
+            icon="✦"
           />
-        ))}
-      </ul>
+          {generos.map((g) => (
+            <SidebarCategory
+              key={g.id}
+              label={g.nome}
+              count={g._count?.jogos}
+              onClick={() =>
+                navigate("/catalogo", { state: { genreId: Number(g.id) } })
+              }
+            />
+          ))}
+        </ul>
+      </SidebarSection>
 
-      <p
-        style={{
-          fontSize: "0.65rem",
-          fontWeight: 700,
-          color: "var(--text-muted)",
-          letterSpacing: "1.5px",
-          textTransform: "uppercase",
-          marginBottom: "10px",
-        }}
-      >
-        Atalhos
-      </p>
-
-      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-        <ShortcutLink
-          icon="⊞"
-          label="Biblioteca"
-          onClick={() => navigate("/biblioteca")}
-        />
-        <ShortcutLink
-          icon="♡"
-          label="Wishlist"
-          onClick={() => navigate("/wishlist")}
-        />
-        <ShortcutLink
-          icon="+"
-          label="Criar jogo"
-          onClick={() => navigate("/criar-jogo")}
-          accent
-        />
-      </ul>
+      <SidebarSection label="Atalhos">
+        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          <ShortcutLink
+            icon="⊞"
+            label="Biblioteca"
+            onClick={() => navigate("/biblioteca")}
+          />
+          <ShortcutLink
+            icon="♡"
+            label="Wishlist"
+            onClick={() => navigate("/wishlist")}
+          />
+          <ShortcutLink
+            icon="+"
+            label="Criar jogo"
+            onClick={() => navigate("/criar-jogo")}
+            accent
+          />
+        </ul>
+      </SidebarSection>
     </aside>
   );
 }
@@ -358,67 +337,6 @@ function HeroBanner({ game }) {
   );
 }
 
-function Chip({ children }) {
-  return (
-    <span
-      style={{
-        background: "rgba(0,0,0,0.3)",
-        color: "rgba(255,255,255,0.9)",
-        backdropFilter: "blur(4px)",
-        padding: "4px 12px",
-        borderRadius: "20px",
-        fontSize: "0.78rem",
-        fontWeight: 500,
-        border: "1px solid rgba(255,255,255,0.2)",
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
-function GameSection({ title, subtitle, games }) {
-  return (
-    <section style={{ marginBottom: "36px" }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "baseline",
-          justifyContent: "space-between",
-          marginBottom: "16px",
-        }}
-      >
-        <div>
-          <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700 }}>
-            {title}
-          </h2>
-          {subtitle && (
-            <p
-              style={{
-                margin: "2px 0 0",
-                fontSize: "0.8rem",
-                color: "var(--text-muted)",
-              }}
-            >
-              {subtitle}
-            </p>
-          )}
-        </div>
-      </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(175px, 1fr))",
-          gap: "16px",
-        }}
-      >
-        {games.map((game) => (
-          <GameCard key={game.id} game={game} variant="compact" />
-        ))}
-      </div>
-    </section>
-  );
-}
 
 function RightSidebar({ games, activeId }) {
   const navigate = useNavigate();
