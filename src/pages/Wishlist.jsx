@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import api from '../services/api';
 import Layout from '../components/Layout';
 import GameCard from '../components/GameCard';
+import PageTitle from '../components/PageTitle';
+import EmptyState from '../components/EmptyState';
 import swal from '../utils/swal';
 
 export default function Wishlist() {
@@ -61,13 +63,13 @@ export default function Wishlist() {
     return (
         <Layout>
             <div style={{ padding: '2rem 1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
-                <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '2rem' }}>Minha Wishlist</h1>
+                <PageTitle>Minha Wishlist</PageTitle>
                 {loading ? (
                     <p style={{ color: 'var(--text-muted)' }}>Carregando...</p>
                 ) : erro ? (
                     <p style={{ color: 'var(--color-error)' }}>{erro}</p>
                 ) : wishlist.length === 0 ? (
-                    <p style={{ color: 'var(--text-muted)' }}>Sua wishlist está vazia.</p>
+                    <EmptyState message="Sua wishlist está vazia." />
                 ) : (
                     <div style={{
                         display: 'grid',

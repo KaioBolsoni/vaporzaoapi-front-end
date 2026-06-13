@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 import swal from '../utils/swal';
 import Layout from '../components/Layout';
+import PageTitle from '../components/PageTitle';
+import EmptyState from '../components/EmptyState';
 
 export default function Library() {
     const [biblioteca, setBiblioteca] = useState([]);
@@ -164,16 +166,7 @@ export default function Library() {
                     </Link>
                 </div>
 
-                <h1 style={{
-                    fontSize: '2rem',
-                    fontWeight: 800,
-                    marginBottom: '2rem',
-                    borderBottom: '1px solid rgba(255,255,255,0.06)',
-                    paddingBottom: '15px',
-                    color: 'var(--text-primary, #fff)'
-                }}>
-                    Minha Biblioteca
-                </h1>
+                <PageTitle divider>Minha Biblioteca</PageTitle>
 
 
                 {loading ? (
@@ -181,9 +174,7 @@ export default function Library() {
                 ) : erro ? (
                     <h2 style={{ color: 'var(--color-error, #ef4444)', textAlign: 'center' }}>{erro}</h2>
                 ) : biblioteca.length === 0 ? (
-                    <p style={{ color: 'var(--text-muted, #888)', fontSize: '1.1rem' }}>
-                        Você ainda não adicionou nenhum jogo à sua biblioteca.
-                    </p>
+                    <EmptyState message="Você ainda não adicionou nenhum jogo à sua biblioteca." />
                 ) : (
                     <div style={{
                         display: 'grid',
