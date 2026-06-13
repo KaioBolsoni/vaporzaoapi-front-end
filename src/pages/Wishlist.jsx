@@ -50,12 +50,7 @@ export default function Wishlist() {
                 setWishlist(res.data);
             } catch (error) {
                 console.error('Erro ao carregar a wishlist:', error);
-                try {
-                    const res2 = await api.get('/wishlist');
-                    setWishlist(res2.data);
-                } catch (error2) {
-                    setErro('Não foi possível carregar sua wishlist.');
-                }
+                setErro('Não foi possível carregar sua wishlist.');
             } finally {
                 setLoading(false);
             }
