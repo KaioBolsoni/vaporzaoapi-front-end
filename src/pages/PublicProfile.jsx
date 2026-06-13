@@ -3,6 +3,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
+import ErrorCard from "../components/ErrorCard";
+import EmptyState from "../components/EmptyState";
 import { useAuth } from "../context/AuthContext";
 import {
   getGameGradient,
@@ -68,22 +70,7 @@ export default function PublicProfile() {
         {loading ? (
           <ProfileSkeleton />
         ) : error ? (
-          <div
-            style={{
-              padding: "3rem",
-              textAlign: "center",
-              background: "var(--bg-surface)",
-              borderRadius: "12px",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
-          >
-            <p style={{ color: "var(--color-error)", marginBottom: "1rem" }}>
-              {error}
-            </p>
-            <button className="btn btn-outline" onClick={() => navigate(-1)}>
-              Voltar
-            </button>
-          </div>
+          <ErrorCard message={error} onAction={() => navigate(-1)} actionLabel="Voltar" />
         ) : (
           <div className="animate-slide-up">
             <ProfileCard profile={profile} isOwnProfile={isOwnProfile} />
@@ -104,18 +91,7 @@ export default function PublicProfile() {
             )}
 
             {!profile.jogosCriados?.length && !profile.reviews?.length && (
-              <div
-                style={{
-                  padding: "3rem",
-                  textAlign: "center",
-                  background: "var(--bg-surface)",
-                  borderRadius: "12px",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  color: "var(--text-muted)",
-                }}
-              >
-                Este usuário ainda não possui atividade pública.
-              </div>
+              <EmptyState message="Este usuário ainda não possui atividade pública." />
             )}
           </div>
         )}

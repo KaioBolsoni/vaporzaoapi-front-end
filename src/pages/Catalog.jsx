@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
+import ErrorCard from "../components/ErrorCard";
+import EmptyState from "../components/EmptyState";
+import SidebarSection from "../components/SidebarSection";
+import SearchInput from "../components/SearchInput";
 import { useGeneros } from "../hooks/useGeneros";
 import { useJogos } from "../hooks/useJogos";
 
@@ -186,7 +190,7 @@ export default function Catalog() {
           {loading ? (
             <CatalogSkeleton />
           ) : error ? (
-            <ErrorCard message={error} onRetry={() => window.location.reload()} />
+            <ErrorCard message={error} onAction={() => window.location.reload()} actionLabel="Tentar novamente" />
           ) : (
             <>
               <p
@@ -220,25 +224,13 @@ export default function Catalog() {
                 </h1>
 
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <SearchInput value={search} onChange={setSearch} />
+                  <SearchInput value={search} onChange={setSearch} placeholder="Buscar título..." />
                   <SortSelect value={sortBy} onChange={setSortBy} />
                 </div>
               </div>
 
               {filtered.length === 0 ? (
-                <div
-                  style={{
-                    padding: "4rem",
-                    textAlign: "center",
-                    background: "var(--bg-surface)",
-                    borderRadius: "12px",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    color: "var(--text-muted)",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  Nenhum jogo encontrado para os filtros selecionados.
-                </div>
+                <EmptyState message="Nenhum jogo encontrado para os filtros selecionados." />
               ) : (
                 <div
                   className="animate-slide-up"
@@ -261,61 +253,6 @@ export default function Catalog() {
   );
 }
 
-function SidebarSection({ label, children }) {
-  return (
-    <div style={{ marginBottom: "28px" }}>
-      <p
-        style={{
-          fontSize: "0.62rem",
-          fontWeight: 700,
-          color: "var(--text-muted)",
-          letterSpacing: "1.5px",
-          textTransform: "uppercase",
-          margin: "0 0 8px 6px",
-        }}
-      >
-        {label}
-      </p>
-      <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>{children}</div>
-    </div>
-  );
-}
-
-function SearchInput({ value, onChange }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "7px",
-        background: "var(--bg-surface)",
-        border: "1px solid rgba(255,255,255,0.07)",
-        borderRadius: "8px",
-        padding: "0 12px",
-        height: "36px",
-        minWidth: "190px",
-      }}
-    >
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--text-muted)", flexShrink: 0 }}>
-        <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-      </svg>
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="Buscar título..."
-        style={{
-          background: "none",
-          border: "none",
-          outline: "none",
-          color: "var(--text-primary)",
-          fontSize: "0.85rem",
-          width: "100%",
-          fontFamily: "var(--font-sans)",
-        }}
-      />
-    </div>
-  );
-}
 
 function SortSelect({ value, onChange }) {
   return (
@@ -342,14 +279,6 @@ function SortSelect({ value, onChange }) {
   );
 }
 
-function ErrorCard({ message, onRetry }) {
-  return (
-    <div style={{ padding: "3rem", textAlign: "center", background: "var(--bg-surface)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)" }}>
-      <p style={{ color: "var(--color-error)", marginBottom: "1rem" }}>{message}</p>
-      <button className="btn btn-outline" onClick={onRetry}>Tentar novamente</button>
-    </div>
-  );
-}
 
 function CatalogSkeleton() {
   return (
