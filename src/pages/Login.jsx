@@ -282,7 +282,9 @@ export default function Login() {
                   className="form-input"
                   type="text"
                   name="identifier"
-                  placeholder="00000.0000"
+                  placeholder="00-00000"
+                  pattern="\d{2}-\d{5}"
+                  title="Formato esperado: 00-00000"
                   value={form.identifier}
                   onChange={onChange}
                   autoComplete="username"
