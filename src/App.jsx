@@ -5,7 +5,7 @@ import FirstAccess from "./pages/FirstAccess";
 import Catalog from "./pages/Catalog";
 import GameDetails from "./pages/GameDetails";
 import PublicProfile from "./pages/PublicProfile";
-import ProtectedRoute from "./components/ProtectRouter/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Library from "./pages/Library";
 import Wishlist from "./pages/Wishlist";
 import CreateGame from "./pages/CreateGame";
