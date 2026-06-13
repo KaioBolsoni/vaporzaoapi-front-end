@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import swal from "../utils/swal";
 import Layout from "../components/Layout";
+import PageTitle from "../components/PageTitle";
 import { useGeneros } from "../hooks/useGeneros";
+import { inputStyle, labelStyle } from "../styles/formStyles";
 
 export default function CreateGame() {
     const navigate = useNavigate();
@@ -84,18 +86,15 @@ export default function CreateGame() {
         <Layout>
             <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem 1.5rem" }}>
 
-                <h1 style={{ fontSize: "2rem", fontWeight: 800, marginBottom: "0.5rem", color: "var(--text-primary, #fff)" }}>
+                <PageTitle subtitle="Preencha os detalhes abaixo para publicar um novo jogo no catálogo.">
                     Criar Novo Jogo
-                </h1>
-                <p style={{ color: "var(--text-muted)", marginBottom: "2rem" }}>
-                    Preencha os detalhes abaixo para publicar um novo jogo no catálogo.
-                </p>
+                </PageTitle>
 
                 <form onSubmit={handleSubmit} style={{ background: "var(--bg-surface)", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
 
                     <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
                         <div style={{ flex: "1 1 300px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                            <label style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--text-secondary)" }}>Título do Jogo *</label>
+                            <label style={labelStyle}>Título do Jogo *</label>
                             <input
                                 type="text"
                                 required
@@ -108,7 +107,7 @@ export default function CreateGame() {
                         </div>
 
                         <div style={{ flex: "1 1 300px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                            <label style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--text-secondary)" }}>Desenvolvedora *</label>
+                            <label style={labelStyle}>Desenvolvedora *</label>
                             <input
                                 type="text"
                                 required
@@ -123,7 +122,7 @@ export default function CreateGame() {
 
                     <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
                         <div style={{ flex: "1 1 150px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                            <label style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--text-secondary)" }}>Preço (R$) *</label>
+                            <label style={labelStyle}>Preço (R$) *</label>
                             <input
                                 type="number"
                                 required
@@ -137,7 +136,7 @@ export default function CreateGame() {
                         </div>
 
                         <div style={{ flex: "1 1 150px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                            <label style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--text-secondary)" }}>Data de Lançamento *</label>
+                            <label style={labelStyle}>Data de Lançamento *</label>
                             <input
                                 type="date"
                                 required
@@ -149,7 +148,7 @@ export default function CreateGame() {
                     </div>
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                        <label style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--text-secondary)" }}>URL da Capa</label>
+                        <label style={labelStyle}>URL da Capa</label>
                         <input
                             type="url"
                             value={capaUrl}
@@ -160,7 +159,7 @@ export default function CreateGame() {
                     </div>
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                        <label style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--text-secondary)" }}>Descrição *</label>
+                        <label style={labelStyle}>Descrição *</label>
                         <textarea
                             required
                             maxLength={5000}
@@ -173,7 +172,7 @@ export default function CreateGame() {
                     </div>
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                        <label style={{ fontWeight: 600, fontSize: "0.9rem", color: "var(--text-secondary)" }}>Gêneros *</label>
+                        <label style={labelStyle}>Gêneros *</label>
                         {loadingGeneros ? (
                             <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>Carregando gêneros...</p>
                         ) : (
@@ -221,15 +220,3 @@ export default function CreateGame() {
 }
 
 
-const inputStyle = {
-    width: "100%",
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.1)",
-    borderRadius: "8px",
-    padding: "10px 14px",
-    color: "var(--text-primary, #fff)",
-    fontSize: "0.95rem",
-    fontFamily: "var(--font-sans)",
-    boxSizing: "border-box",
-    outline: "none",
-};

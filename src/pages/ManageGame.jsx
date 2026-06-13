@@ -3,7 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import swal from "../utils/swal";
 import Layout from "../components/Layout";
+import PageTitle from "../components/PageTitle";
 import { useGeneros } from "../hooks/useGeneros";
+import { inputStyle, labelStyle, formBoxStyle, buttonStyle } from "../styles/formStyles";
 
 export default function ManageGame() {
     const { id } = useParams();
@@ -140,9 +142,7 @@ export default function ManageGame() {
     return (
         <Layout>
             <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem 1.5rem" }}>
-                <h1 style={{ fontSize: "2rem", fontWeight: 800, marginBottom: "2rem", color: "#fff" }}>
-                    Gerenciar Jogo
-                </h1>
+                <PageTitle>Gerenciar Jogo</PageTitle>
 
 
                 <form onSubmit={handleSalvarEdicao} style={formBoxStyle}>
@@ -258,7 +258,3 @@ export default function ManageGame() {
 }
 
 
-const formBoxStyle = { background: "var(--bg-surface, #1e1e1e)", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)" };
-const labelStyle = { fontWeight: 600, fontSize: "0.9rem", color: "var(--text-secondary, #aaa)" };
-const inputStyle = { width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", padding: "10px 14px", color: "#fff", outline: "none" };
-const buttonStyle = { background: "var(--color-primary, #8b5cf6)", color: "#fff", border: "none", padding: "10px 24px", borderRadius: "8px", cursor: "pointer", fontWeight: 600, alignSelf: "flex-end" };
