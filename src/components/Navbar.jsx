@@ -28,6 +28,10 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
+    setMenuAberto(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
     function handleClick(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
@@ -122,6 +126,92 @@ export default function Navbar() {
         <SearchBar />
       </div>
 
+
+      {/* Hambúrguer mobile */}
+      <button
+        className="nav-hamburger"
+        onClick={() => setMenuAberto(v => !v)}
+        aria-label="Menu"
+        style={{
+          display: "none",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          color: "var(--text-primary)",
+          padding: "6px",
+          borderRadius: "6px",
+        }}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          {menuAberto
+            ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
+            : <><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>
+          }
+        </svg>
+      </button>
+
+      {/* Menu mobile expandido */}
+      {menuAberto && (
+        <div style={{
+          position: "absolute",
+          top: "58px",
+          left: 0,
+          right: 0,
+          background: "var(--bg-surface)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          padding: "0.5rem 1rem",
+          zIndex: 199,
+          display: "flex",
+          flexDirection: "column",
+        }}>
+          {NAV_LINKS.map((link) => (
+            <button
+              key={link.to}
+              onClick={() => navigate(link.to)}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: location.pathname === link.to ? "var(--text-primary)" : "var(--text-secondary)",
+                fontWeight: location.pathname === link.to ? 600 : 400,
+                fontSize: "0.95rem",
+                fontFamily: "var(--font-sans)",
+                textAlign: "left",
+                padding: "0.75rem 0.5rem",
+                borderBottom: "1px solid rgba(255,255,255,0.04)",
+              }}
+            >
+              {link.label}
+            </button>
+          ))}
+          {user && (
+            <button
+              onClick={() => { navigate(`/perfil/${user.matricula}`); }}
+              style={{
+                background: "none", border: "none", cursor: "pointer",
+                color: "var(--text-secondary)", fontSize: "0.95rem",
+                fontFamily: "var(--font-sans)", textAlign: "left",
+                padding: "0.75rem 0.5rem",
+              }}
+            >
+              👤 Meu Perfil
+            </button>
+          )}
+          {user && (
+            <button
+              onClick={() => { logout(); navigate("/login"); }}
+              style={{
+                background: "none", border: "none", cursor: "pointer",
+                color: "var(--color-error)", fontSize: "0.95rem",
+                fontFamily: "var(--font-sans)", textAlign: "left",
+                padding: "0.75rem 0.5rem",
+              }}
+            >
+              🚪 Sair
+            </button>
+          )}
+        </div>
+      )}
 
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginLeft: "auto" }}>
         {user && (
