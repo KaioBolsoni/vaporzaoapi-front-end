@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import swal from "../utils/swal";
 import Layout from "../components/Layout";
 import PageTitle from "../components/PageTitle";
-import { useGeneros } from "../hooks/useGeneros";
+import { GlobalStateContext } from "../global/GlobalStateContext";
 import { inputStyle, labelStyle, formBoxStyle, buttonStyle } from "../styles/formStyles";
 
 export default function ManageGame() {
@@ -30,7 +30,8 @@ export default function ManageGame() {
     const [novaImagemLegenda, setNovaImagemLegenda] = useState("");
 
 
-    const { generos: generosDisponiveis } = useGeneros();
+    const { states } = useContext(GlobalStateContext);
+    const { generos: generosDisponiveis } = states;
     const [loading, setLoading] = useState(true);
     const [salvando, setSalvando] = useState(false);
     const [adicionandoImg, setAdicionandoImg] = useState(false);

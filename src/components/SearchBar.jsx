@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useJogos } from "../hooks/useJogos";
+import { GlobalStateContext } from "../global/GlobalStateContext";
 
 export default function SearchBar() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
-  const { jogos: games } = useJogos();
+  const { states } = useContext(GlobalStateContext);
+  const { jogos: games } = states;
 
   const filtered = query.trim()
     ? games

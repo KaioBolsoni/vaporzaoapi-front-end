@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Layout from "../components/Layout";
@@ -6,14 +6,15 @@ import Chip from "../components/Chip";
 import GameSection from "../components/GameSection";
 import SidebarSection from "../components/SidebarSection";
 import { getGameGradient, getGameInitials } from "../utils/gameColors";
-import { useGeneros } from "../hooks/useGeneros";
+import { GlobalStateContext } from "../global/GlobalStateContext";
 
 export default function Home() {
   const [recentes, setRecentes] = useState([]);
   const [topAvaliados, setTopAvaliados] = useState([]);
   const [populares, setPopulares] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { generos } = useGeneros();
+  const { states } = useContext(GlobalStateContext);
+  const { generos } = states;
 
   useEffect(() => {
     async function fetchData() {

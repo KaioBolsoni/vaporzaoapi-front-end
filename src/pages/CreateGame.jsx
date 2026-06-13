@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import swal from "../utils/swal";
 import Layout from "../components/Layout";
 import PageTitle from "../components/PageTitle";
-import { useGeneros } from "../hooks/useGeneros";
+import { GlobalStateContext } from "../global/GlobalStateContext";
 import { inputStyle, labelStyle } from "../styles/formStyles";
 
 export default function CreateGame() {
@@ -20,7 +20,8 @@ export default function CreateGame() {
     const [generoIds, setGeneroIds] = useState([]);
 
 
-    const { generos: generosDisponiveis, loading: loadingGeneros } = useGeneros();
+    const { states } = useContext(GlobalStateContext);
+    const { generos: generosDisponiveis, generosLoading: loadingGeneros } = states;
     const [loading, setLoading] = useState(false);
 
 

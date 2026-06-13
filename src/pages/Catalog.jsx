@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
@@ -6,8 +6,7 @@ import ErrorCard from "../components/ErrorCard";
 import EmptyState from "../components/EmptyState";
 import SidebarSection from "../components/SidebarSection";
 import SearchInput from "../components/SearchInput";
-import { useGeneros } from "../hooks/useGeneros";
-import { useJogos } from "../hooks/useJogos";
+import { GlobalStateContext } from "../global/GlobalStateContext";
 
 const SORT_OPTIONS = [
   { value: "titulo", label: "A–Z" },
@@ -24,8 +23,8 @@ const PRICE_OPTIONS = [
 
 export default function Catalog() {
   const location = useLocation();
-  const { jogos, loading: loadingJogos } = useJogos();
-  const { generos, loading: loadingGeneros } = useGeneros();
+  const { states } = useContext(GlobalStateContext);
+  const { jogos, jogosLoading: loadingJogos, generos, generosLoading: loadingGeneros } = states;
   const loading = loadingJogos || loadingGeneros;
   const [error] = useState("");
   const [search, setSearch] = useState(() => {
