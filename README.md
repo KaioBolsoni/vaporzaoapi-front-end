@@ -120,38 +120,6 @@ const { data, isLoading, error, refetch } = useRequestData(
 
 ---
 
-## ⚙️ Como Rodar o Projeto
-
-### Pré-requisitos
-- Node.js 18+
-- API do Vaporzão rodando localmente
-
-### Instalação
-
-```bash
-# Clone o repositório
-git clone https://github.com/KaioBolsoni/vaporzaoapi-front-end.git
-cd vaporzaoapi-front-end
-
-# Instale as dependências
-npm install
-
-# Inicie o servidor de desenvolvimento
-npm run dev
-```
-
-A aplicação estará disponível em `http://localhost:5173`.
-
-### Variáveis de Ambiente
-
-Crie um arquivo `.env` na raiz com a URL base da API:
-
-```env
-VITE_API_URL=http://localhost:3000
-```
-
----
-
 ## 👥 Equipe
 
 | Nome | Papel |
@@ -166,4 +134,4 @@ VITE_API_URL=http://localhost:3000
 ## 🏫 Instituição
 
 Projeto desenvolvido para a disciplina de **Desenvolvimento Web** na  
-**Faculdade de Minas — FAMINAS**, 2025.
+**Faculdade de Minas FAMINAS**, 2026.
