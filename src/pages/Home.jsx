@@ -12,13 +12,13 @@ import { GlobalStateContext } from "../global/GlobalStateContext";
 export default function Home() {
   const { states } = useContext(GlobalStateContext);
   const { generos } = states;
-  const { data: destaques, isLoading: loading } = useRequestData(
+  const { data: destaquesData, isLoading: loading } = useRequestData(
     () => api.get("/jogos/destaques").then((r) => r.data || {}),
     []
   );
-  const recentes = destaques?.recentes || [];
-  const topAvaliados = destaques?.topAvaliados || [];
-  const populares = destaques?.populares || [];
+  const recentes = destaquesData?.recentes || [];
+  const topAvaliados = destaquesData?.topAvaliados || [];
+  const populares = destaquesData?.populares || [];
 
   const heroGame = topAvaliados[0] || recentes[0] || null;
   const allGames = [...recentes, ...topAvaliados, ...populares];
