@@ -126,7 +126,6 @@ export default function Library() {
         <Layout>
             <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 1.5rem 3rem' }}>
 
-                {/* BOTÕES DE NAVEGAÇÃO EM CIMA */}
                 <div style={{ display: 'flex', gap: '15px', marginBottom: '2rem' }}>
                     <Link
                         to="/"

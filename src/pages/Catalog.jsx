@@ -87,7 +87,6 @@ export default function Catalog() {
   return (
     <Layout>
       <div className="catalog-layout">
-        {/* Sidebar */}
         <aside className="catalog-sidebar">
           <SidebarSection label="Gêneros">
             {loading
@@ -184,7 +183,6 @@ export default function Catalog() {
           )}
         </aside>
 
-        {/* Main */}
         <main className="catalog-main">
           {loading ? (
             <CatalogSkeleton />

@@ -393,7 +393,6 @@ function GamesSection({ jogos, isOwnProfile }) {
           </p>
         </div>
 
-        {/* BOTÃO ATUALIZADO: Agora leva para a tela de Criar Jogo */}
         {isOwnProfile && (
           <Link
             to="/criar-jogo"
