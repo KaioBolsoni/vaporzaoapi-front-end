@@ -37,7 +37,6 @@ export default function Wishlist() {
                 showConfirmButton: false
             });
         } catch (error) {
-            console.error('Erro ao remover jogo da wishlist:', error);
             swal.fire({
                 icon: 'error',
                 title: 'Erro',
@@ -51,8 +50,7 @@ export default function Wishlist() {
             try {
                 const res = await api.get('/wishlist/me');
                 setWishlist(res.data);
-            } catch (error) {
-                console.error('Erro ao carregar a wishlist:', error);
+            } catch {
                 setErro('Não foi possível carregar sua wishlist.');
             } finally {
                 setLoading(false);

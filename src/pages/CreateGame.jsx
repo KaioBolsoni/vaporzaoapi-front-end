@@ -72,7 +72,6 @@ export default function CreateGame() {
             });
 
         } catch (error) {
-            console.error("Erro ao criar jogo:", error);
             swal.fire({
                 icon: "error",
                 title: "Erro ao criar",

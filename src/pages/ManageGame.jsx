@@ -53,7 +53,6 @@ export default function ManageGame() {
                 setImagensAtuais(jogo.imagens || []);
                 setConquistasAtuais(jogo.conquistas || []);
             } catch (error) {
-                console.error("Erro ao carregar dados:", error);
                 swal.fire("Erro", "Não foi possível carregar os dados do jogo.", "error");
                 navigate("/");
             } finally {

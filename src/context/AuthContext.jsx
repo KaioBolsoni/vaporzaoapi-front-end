@@ -16,11 +16,7 @@ export function AuthProvider({ children }) {
           const response = await api.get("/auth/me");
           setToken(storedToken);
           setUser(response.data);
-        } catch (error) {
-          console.error(
-            "AuthContext init error (token might be expired):",
-            error,
-          );
+        } catch {
           localStorage.removeItem("token");
         }
       }

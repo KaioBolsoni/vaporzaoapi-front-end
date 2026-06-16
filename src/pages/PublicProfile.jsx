@@ -25,7 +25,6 @@ export default function PublicProfile() {
         const res = await api.get(`/usuarios/${matricula}`);
         setProfile(res.data);
       } catch (err) {
-        console.error("Profile fetch error:", err);
         setError(
           err.response?.status === 404
             ? "Usuário não encontrado."

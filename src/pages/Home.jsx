@@ -24,8 +24,7 @@ export default function Home() {
         setRecentes(d.recentes || []);
         setTopAvaliados(d.topAvaliados || []);
         setPopulares(d.populares || []);
-      } catch (err) {
-        console.error("Home fetch error:", err);
+      } catch {
       } finally {
         setLoading(false);
       }

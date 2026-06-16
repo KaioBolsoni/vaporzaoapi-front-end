@@ -26,8 +26,7 @@ export default function Library() {
 
                 setBiblioteca(biblioRes.data);
                 setMatricula(userRes.data.matricula);
-            } catch (error) {
-                console.error('Erro ao carregar os dados:', error);
+            } catch {
                 setErro('Não foi possível carregar os seus jogos salvos.');
             } finally {
                 setLoading(false);
@@ -69,7 +68,6 @@ export default function Library() {
                 showConfirmButton: false
             });
         } catch (error) {
-            console.error('Erro ao atualizar horas:', error);
             swal.fire({
                 icon: 'error',
                 title: 'Erro',
@@ -116,7 +114,6 @@ export default function Library() {
                 showConfirmButton: false
             });
         } catch (error) {
-            console.error('Erro ao remover jogo:', error);
             swal.fire({
                 icon: 'error',
                 title: 'Erro',

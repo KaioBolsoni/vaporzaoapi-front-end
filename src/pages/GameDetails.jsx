@@ -34,7 +34,6 @@ export default function GameDetails() {
       setStatus(statusRes.data);
       setCurrentUser(userRes.data);
     } catch (err) {
-      console.error("GameDetails fetch error:", err);
       setError(
         err.response?.status === 404
           ? "Jogo não encontrado."
