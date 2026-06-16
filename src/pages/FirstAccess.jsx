@@ -3,10 +3,10 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import swal from "../utils/swal";
+import { useForm } from "../hooks/useForm";
 
 export default function FirstAccess() {
-  const [matricula, setMatricula] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, onChange] = useForm({ matricula: "", password: "" });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -21,15 +21,15 @@ export default function FirstAccess() {
 
   async function handleFirstAccess(e) {
     e.preventDefault();
-    if (!matricula.trim() || !password.trim()) {
+    if (!form.matricula.trim() || !form.password.trim()) {
       swal.fire({ icon: "warning", title: "Campos obrigatórios", text: "Preencha sua matrícula e a nova senha." });
       return;
     }
     setLoading(true);
     try {
       const response = await api.post("/auth/primeiro-acesso", {
-        matricula,
-        senha: password,
+        matricula: form.matricula,
+        senha: form.password,
       });
       const { token: jwtToken, usuario } = response.data;
       login(jwtToken, usuario);
@@ -93,9 +93,10 @@ export default function FirstAccess() {
               <input
                 className="form-input"
                 type="text"
+                name="matricula"
                 placeholder="00000.0000"
-                value={matricula}
-                onChange={(e) => setMatricula(e.target.value)}
+                value={form.matricula}
+                onChange={onChange}
                 autoComplete="username"
               />
             </div>
@@ -113,9 +114,10 @@ export default function FirstAccess() {
               <input
                 className="form-input"
                 type={showPass ? "text" : "password"}
+                name="password"
                 placeholder="Mínimo 6 caracteres"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={form.password}
+                onChange={onChange}
                 autoComplete="new-password"
                 style={{ paddingRight: "2.8rem" }}
               />
