@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
@@ -27,29 +27,15 @@ export default function Catalog() {
   const { jogos, jogosLoading: loadingJogos, generos, generosLoading: loadingGeneros } = states;
   const loading = loadingJogos || loadingGeneros;
   const [error] = useState("");
-  const [search, setSearch] = useState(() => {
-    return location.state?.search || "";
-  });
-  const [selectedGenres, setSelectedGenres] = useState(() => {
-    if (location.state?.genreId) {
-      return [Number(location.state.genreId)];
-    }
-    return [];
-  });
+  const [search, setSearch] = useState("");
+  const [selectedGenres, setSelectedGenres] = useState([]);
   const [priceFilter, setPriceFilter] = useState("todos");
   const [sortBy, setSortBy] = useState("titulo");
 
-  const [prevGenreId, setPrevGenreId] = useState(location.state?.genreId);
-  if (location.state?.genreId !== prevGenreId) {
-    setPrevGenreId(location.state?.genreId);
+  useEffect(() => {
     setSelectedGenres(location.state?.genreId ? [Number(location.state.genreId)] : []);
-  }
-
-  const [prevSearch, setPrevSearch] = useState(location.state?.search);
-  if (location.state?.search !== prevSearch) {
-    setPrevSearch(location.state?.search);
     setSearch(location.state?.search || "");
-  }
+  }, [location.state?.genreId, location.state?.search]);
 
   function toggleGenre(id) {
     setSelectedGenres((prev) =>
