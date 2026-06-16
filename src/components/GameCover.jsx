@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getGameGradient, getGameInitials } from "../utils/gameColors";
 
-const BROKEN_HOSTS = ["example.com", "chatgpt.com"];
+const BROKEN_HOSTS = ["example.com", "chatgpt.com", "a.com"];
 
 function isValidUrl(url) {
   if (!url) return false;
