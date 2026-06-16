@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import useRequestData from "../hooks/useRequestData";
+import { useRequestData } from "../hooks/useRequestData";
 import Layout from "../components/Layout";
 import Chip from "../components/Chip";
 import GameSection from "../components/GameSection";

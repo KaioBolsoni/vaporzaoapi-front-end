@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-export default function useRequestData(requestFn, deps = []) {
+export function useRequestData(requestFn, deps = []) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);

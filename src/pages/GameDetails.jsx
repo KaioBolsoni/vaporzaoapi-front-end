@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
-import useRequestData from "../hooks/useRequestData";
+import { useRequestData } from "../hooks/useRequestData";
 import { useAuth } from "../context/AuthContext";
 import Layout from "../components/Layout";
 import GameCover from "../components/GameCover";

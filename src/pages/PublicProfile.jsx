@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
-import useRequestData from "../hooks/useRequestData";
+import { useRequestData } from "../hooks/useRequestData";
 import swal from "../utils/swal";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
