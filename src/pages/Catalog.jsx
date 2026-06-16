@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
-import ErrorCard from "../components/ErrorCard";
 import EmptyState from "../components/EmptyState";
 import SidebarSection from "../components/SidebarSection";
 import SearchInput from "../components/SearchInput";
@@ -26,7 +25,6 @@ export default function Catalog() {
   const { states } = useContext(GlobalStateContext);
   const { jogos, jogosLoading: loadingJogos, generos, generosLoading: loadingGeneros } = states;
   const loading = loadingJogos || loadingGeneros;
-  const [error] = useState("");
   const [search, setSearch] = useState("");
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [priceFilter, setPriceFilter] = useState("todos");
@@ -172,8 +170,6 @@ export default function Catalog() {
         <main className="catalog-main">
           {loading ? (
             <CatalogSkeleton />
-          ) : error ? (
-            <ErrorCard message={error} onAction={() => window.location.reload()} actionLabel="Tentar novamente" />
           ) : (
             <>
               <p
