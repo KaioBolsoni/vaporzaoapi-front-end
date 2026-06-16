@@ -134,4 +134,4 @@ const { data, isLoading, error, refetch } = useRequestData(
 ## 🏫 Instituição
 
 Projeto desenvolvido para a disciplina de **Desenvolvimento Web** na  
-**Faculdade de Minas FAMINAS**, 2026.
+**FAMINAS**, 2026.
