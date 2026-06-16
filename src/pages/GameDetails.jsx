@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import Layout from "../components/Layout";
 import GameCover from "../components/GameCover";
 import ReviewModal from "../components/ReviewModal";
@@ -12,6 +13,7 @@ import swal from "../utils/swal";
 export default function GameDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
 
   const [game, setGame] = useState(null);
   const [status, setStatus] = useState(null);
@@ -19,20 +21,16 @@ export default function GameDetails() {
   const [error, setError] = useState("");
   const [showReviewModal, setShowReviewModal] = useState(false);
 
-  const [currentUser, setCurrentUser] = useState(null);
   const [reviewEditando, setReviewEditando] = useState(null);
 
   async function fetchData() {
     try {
-
-      const [gameRes, statusRes, userRes] = await Promise.all([
+      const [gameRes, statusRes] = await Promise.all([
         api.get(`/jogos/${id}`),
         api.get(`/jogos/${id}/status`),
-        api.get('/auth/me').catch(() => ({ data: null }))
       ]);
       setGame(gameRes.data);
       setStatus(statusRes.data);
-      setCurrentUser(userRes.data);
     } catch (err) {
       setError(
         err.response?.status === 404

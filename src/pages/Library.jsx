@@ -6,12 +6,13 @@ import Layout from '../components/Layout';
 import PageTitle from '../components/PageTitle';
 import EmptyState from '../components/EmptyState';
 import ErrorCard from '../components/ErrorCard';
+import { useAuth } from '../context/AuthContext';
 
 export default function Library() {
+    const { user } = useAuth();
     const [biblioteca, setBiblioteca] = useState([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState(null);
-    const [matricula, setMatricula] = useState("");
 
     const [editandoId, setEditandoId] = useState(null);
     const [horasInput, setHorasInput] = useState("");
@@ -19,13 +20,8 @@ export default function Library() {
     useEffect(() => {
         async function carregarDados() {
             try {
-                const [biblioRes, userRes] = await Promise.all([
-                    api.get('/biblioteca/me'),
-                    api.get('/auth/me')
-                ]);
-
-                setBiblioteca(biblioRes.data);
-                setMatricula(userRes.data.matricula);
+                const res = await api.get('/biblioteca/me');
+                setBiblioteca(res.data);
             } catch {
                 setErro('Não foi possível carregar os seus jogos salvos.');
             } finally {
@@ -144,7 +140,7 @@ export default function Library() {
                         ← Voltar ao Catálogo
                     </Link>
                     <Link
-                        to={matricula ? `/perfil/${matricula}` : "#"}
+                        to={user?.matricula ? `/perfil/${user.matricula}` : "#"}
                         style={{
                             background: 'rgba(139,92,246,0.15)',
                             color: 'var(--color-primary, #a78bfa)',
@@ -155,8 +151,8 @@ export default function Library() {
                             fontSize: '0.9rem',
                             fontWeight: 600,
                             transition: 'background 0.2s',
-                            pointerEvents: matricula ? 'auto' : 'none',
-                            opacity: matricula ? 1 : 0.5
+                            pointerEvents: user?.matricula ? 'auto' : 'none',
+                            opacity: user?.matricula ? 1 : 0.5
                         }}
                     >
                         Meu Perfil 👤
