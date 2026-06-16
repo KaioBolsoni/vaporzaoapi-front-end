@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
+import useRequestData from "../hooks/useRequestData";
 import swal from "../utils/swal";
 import Layout from "../components/Layout";
 import GameCard from "../components/GameCard";
@@ -15,27 +16,21 @@ export default function PublicProfile() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function fetchProfile() {
+  const { data: profile, isLoading: loading, error } = useRequestData(
+    async () => {
       try {
         const res = await api.get(`/usuarios/${matricula}`);
-        setProfile(res.data);
+        return res.data;
       } catch (err) {
-        setError(
+        throw new Error(
           err.response?.status === 404
             ? "Usuário não encontrado."
-            : "Erro ao carregar o perfil.",
+            : "Erro ao carregar o perfil."
         );
-      } finally {
-        setLoading(false);
       }
-    }
-    fetchProfile();
-  }, [matricula]);
+    },
+    [matricula]
+  );
 
   const isOwnProfile = user?.matricula === matricula;
 

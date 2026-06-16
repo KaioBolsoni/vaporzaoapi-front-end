@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import useRequestData from "../hooks/useRequestData";
 import { useAuth } from "../context/AuthContext";
 import Layout from "../components/Layout";
 import GameCover from "../components/GameCover";
@@ -15,36 +16,28 @@ export default function GameDetails() {
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
 
-  const [game, setGame] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { data, isLoading: loading, error, refetch: fetchData } = useRequestData(
+    async () => {
+      try {
+        const [gameRes, statusRes] = await Promise.all([
+          api.get(`/jogos/${id}`),
+          api.get(`/jogos/${id}/status`),
+        ]);
+        return { game: gameRes.data, status: statusRes.data };
+      } catch (err) {
+        throw new Error(
+          err.response?.status === 404
+            ? "Jogo não encontrado."
+            : "Erro ao carregar detalhes do jogo."
+        );
+      }
+    },
+    [id]
+  );
+  const game = data?.game ?? null;
+  const status = data?.status ?? null;
   const [showReviewModal, setShowReviewModal] = useState(false);
-
   const [reviewEditando, setReviewEditando] = useState(null);
-
-  async function fetchData() {
-    try {
-      const [gameRes, statusRes] = await Promise.all([
-        api.get(`/jogos/${id}`),
-        api.get(`/jogos/${id}/status`),
-      ]);
-      setGame(gameRes.data);
-      setStatus(statusRes.data);
-    } catch (err) {
-      setError(
-        err.response?.status === 404
-          ? "Jogo não encontrado."
-          : "Erro ao carregar detalhes do jogo.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, [id]);
 
   return (
     <Layout>
@@ -122,7 +115,6 @@ export default function GameDetails() {
                 onSuccess={() => {
                   setShowReviewModal(false);
                   setReviewEditando(null);
-                  setLoading(true);
                   fetchData();
                 }}
               />

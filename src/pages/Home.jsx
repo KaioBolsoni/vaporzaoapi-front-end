@@ -1,6 +1,7 @@
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import useRequestData from "../hooks/useRequestData";
 import Layout from "../components/Layout";
 import Chip from "../components/Chip";
 import GameSection from "../components/GameSection";
@@ -9,28 +10,15 @@ import { getGameGradient, getGameInitials } from "../utils/gameColors";
 import { GlobalStateContext } from "../global/GlobalStateContext";
 
 export default function Home() {
-  const [recentes, setRecentes] = useState([]);
-  const [topAvaliados, setTopAvaliados] = useState([]);
-  const [populares, setPopulares] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { states } = useContext(GlobalStateContext);
   const { generos } = states;
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const destaquesRes = await api.get("/jogos/destaques");
-        const d = destaquesRes.data || {};
-        setRecentes(d.recentes || []);
-        setTopAvaliados(d.topAvaliados || []);
-        setPopulares(d.populares || []);
-      } catch {
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
+  const { data: destaques, isLoading: loading } = useRequestData(
+    () => api.get("/jogos/destaques").then((r) => r.data || {}),
+    []
+  );
+  const recentes = destaques?.recentes || [];
+  const topAvaliados = destaques?.topAvaliados || [];
+  const populares = destaques?.populares || [];
 
   const heroGame = topAvaliados[0] || recentes[0] || null;
   const allGames = [...recentes, ...topAvaliados, ...populares];
