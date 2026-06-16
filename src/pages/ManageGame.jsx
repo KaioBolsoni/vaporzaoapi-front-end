@@ -22,6 +22,8 @@ export default function ManageGame() {
   const [conquistasAtuais, setConquistasAtuais] = useState([]);
   const [novaConquistaTitulo, setNovaConquistaTitulo] = useState("");
   const [novaConquistaDescricao, setNovaConquistaDescricao] = useState("");
+  const [novaConquistaPontos, setNovaConquistaPontos] = useState("");
+  const [novaConquistaIconeUrl, setNovaConquistaIconeUrl] = useState("");
   const [adicionandoConquista, setAdicionandoConquista] = useState(false);
 
   const [novaImagemUrl, setNovaImagemUrl] = useState("");
@@ -96,11 +98,15 @@ export default function ManageGame() {
     try {
       const response = await api.post(`/jogos/${id}/conquistas`, {
         titulo: novaConquistaTitulo,
-        descricao: novaConquistaDescricao || null,
+        descricao: novaConquistaDescricao,
+        pontos: parseInt(novaConquistaPontos, 10),
+        iconeUrl: novaConquistaIconeUrl || null,
       });
       setConquistasAtuais([...conquistasAtuais, response.data]);
       setNovaConquistaTitulo("");
       setNovaConquistaDescricao("");
+      setNovaConquistaPontos("");
+      setNovaConquistaIconeUrl("");
       swal.fire("Sucesso!", "Conquista adicionada.", "success");
     } catch {
       swal.fire("Erro", "Não foi possível adicionar a conquista.", "error");
@@ -224,13 +230,21 @@ export default function ManageGame() {
           <h2 style={{ fontSize: "1.3rem", marginBottom: "1rem", color: "#f59e0b" }}>Conquistas</h2>
 
           <form onSubmit={handleAdicionarConquista} style={{ display: "flex", gap: "10px", alignItems: "flex-end", marginBottom: "1.5rem", flexWrap: "wrap" }}>
-            <div style={{ flex: "1 1 200px" }}>
+            <div style={{ flex: "1 1 180px" }}>
               <label style={labelStyle}>Título *</label>
               <input type="text" required value={novaConquistaTitulo} onChange={(e) => setNovaConquistaTitulo(e.target.value)} style={inputStyle} />
             </div>
-            <div style={{ flex: "1 1 300px" }}>
-              <label style={labelStyle}>Descrição</label>
-              <input type="text" value={novaConquistaDescricao} onChange={(e) => setNovaConquistaDescricao(e.target.value)} style={inputStyle} />
+            <div style={{ flex: "1 1 240px" }}>
+              <label style={labelStyle}>Descrição *</label>
+              <input type="text" required value={novaConquistaDescricao} onChange={(e) => setNovaConquistaDescricao(e.target.value)} style={inputStyle} />
+            </div>
+            <div style={{ flex: "0 1 90px" }}>
+              <label style={labelStyle}>Pontos *</label>
+              <input type="number" required min="0" max="1000" value={novaConquistaPontos} onChange={(e) => setNovaConquistaPontos(e.target.value)} placeholder="0–1000" style={inputStyle} />
+            </div>
+            <div style={{ flex: "1 1 220px" }}>
+              <label style={labelStyle}>URL do Ícone</label>
+              <input type="url" value={novaConquistaIconeUrl} onChange={(e) => setNovaConquistaIconeUrl(e.target.value)} placeholder="https://..." style={inputStyle} />
             </div>
             <button type="submit" disabled={adicionandoConquista} style={{ ...buttonStyle, background: "#f59e0b" }}>
               {adicionandoConquista ? "Salvando..." : "Adicionar"}
@@ -239,9 +253,18 @@ export default function ManageGame() {
 
           <div style={{ display: "grid", gap: "10px" }}>
             {conquistasAtuais.map((c) => (
-              <div key={c.id} style={{ background: "rgba(0,0,0,0.2)", padding: "10px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
-                <span style={{ fontWeight: 600 }}>🏆 {c.titulo}</span>
-                {c.descricao && <p style={{ margin: "4px 0 0", fontSize: "0.8rem", color: "#aaa" }}>{c.descricao}</p>}
+              <div key={c.id} style={{ background: "rgba(0,0,0,0.2)", padding: "10px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", gap: "12px" }}>
+                {c.iconeUrl
+                  ? <img src={c.iconeUrl} alt="" style={{ width: "36px", height: "36px", objectFit: "contain", borderRadius: "4px", flexShrink: 0 }} />
+                  : <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>🏆</span>
+                }
+                <div>
+                  <span style={{ fontWeight: 600 }}>{c.titulo}</span>
+                  {c.pontos !== undefined && (
+                    <span style={{ marginLeft: "8px", fontSize: "0.75rem", color: "#f59e0b", fontWeight: 700 }}>{c.pontos} pts</span>
+                  )}
+                  {c.descricao && <p style={{ margin: "4px 0 0", fontSize: "0.8rem", color: "#aaa" }}>{c.descricao}</p>}
+                </div>
               </div>
             ))}
           </div>
