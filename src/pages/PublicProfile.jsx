@@ -16,7 +16,7 @@ export default function PublicProfile() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const { data: profile, isLoading: loading, error } = useRequestData(
+  const { data: profile, isLoading: loading, error, refetch } = useRequestData(
     async () => {
       try {
         const res = await api.get(`/usuarios/${matricula}`);
@@ -52,7 +52,7 @@ export default function PublicProfile() {
             <ProfileCard
               profile={profile}
               isOwnProfile={isOwnProfile}
-              onNameUpdate={(newName) => setProfile((prev) => ({ ...prev, nome: newName }))}
+              onNameUpdate={refetch}
             />
             <StatsRow profile={profile} />
 
@@ -232,7 +232,7 @@ function ProfileCard({ profile, isOwnProfile, onNameUpdate }) {
                     try {
                       await api.patch("/usuarios/me", { nome: novoNome.trim() });
                       setEditando(false);
-                      onNameUpdate(novoNome.trim());
+                      onNameUpdate();
                     } catch (err) {
                       swal.fire({ icon: "error", title: "Erro", text: "Não foi possível atualizar o nome." });
                     }
