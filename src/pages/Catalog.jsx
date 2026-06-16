@@ -5,7 +5,7 @@ import GameCard from "../components/GameCard";
 import EmptyState from "../components/EmptyState";
 import SidebarSection from "../components/SidebarSection";
 import SearchInput from "../components/SearchInput";
-import { GlobalStateContext } from "../global/GlobalStateContext";
+import { GlobalStateContext } from "../context/GlobalStateContext";
 
 const SORT_OPTIONS = [
   { value: "titulo", label: "A–Z" },

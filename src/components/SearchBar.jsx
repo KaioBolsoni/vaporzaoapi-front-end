@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { GlobalStateContext } from "../global/GlobalStateContext";
+import { GlobalStateContext } from "../context/GlobalStateContext";
 
 export default function SearchBar() {
   const navigate = useNavigate();

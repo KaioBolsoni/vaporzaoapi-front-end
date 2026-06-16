@@ -7,7 +7,7 @@ import Chip from "../components/Chip";
 import GameSection from "../components/GameSection";
 import SidebarSection from "../components/SidebarSection";
 import { getGameGradient, getGameInitials } from "../utils/gameColors";
-import { GlobalStateContext } from "../global/GlobalStateContext";
+import { GlobalStateContext } from "../context/GlobalStateContext";
 
 export default function Home() {
   const { states } = useContext(GlobalStateContext);

@@ -4,7 +4,7 @@ import api from "../services/api";
 import swal from "../utils/swal";
 import Layout from "../components/Layout";
 import PageTitle from "../components/PageTitle";
-import { GlobalStateContext } from "../global/GlobalStateContext";
+import { GlobalStateContext } from "../context/GlobalStateContext";
 import { inputStyle, labelStyle, formBoxStyle, buttonStyle } from "../styles/formStyles";
 
 export default function ManageGame() {
